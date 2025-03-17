@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  // Apply role to body for CSS targeting
+  document.addEventListener('DOMContentLoaded', function() {
+    const userJson = localStorage.getItem('user');
+    if (userJson) {
+      try {
+        const user = JSON.parse(userJson);
+        document.body.setAttribute('data-role', user.role);
+        
+        // Show different content based on role
+        if (user.role === 'student') {
+          document.querySelectorAll('.student-only').forEach(el => el.style.display = '');
+        } else {
+          const studentContent = document.querySelector('.student-content');
+          if (studentContent) {
+            const noticeEl = document.createElement('div');
+            noticeEl.className = 'notice';
+            noticeEl.innerHTML = '<p>Note: Some advanced learning content is only available for student accounts.</p>';
+            studentContent.prepend(noticeEl);
+          }
+        }
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+      }
+    }
+  });
+</script>
+
+  <title>MediConnect - Learning</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>MediConnect</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#consultation">Consultation</a></li>
+          <li><a href="learning.html" class="active">Learning</a></li>
+          <li><a href="index.html#community">Community</a></li>
+          <li><a href="ai-chat.html">AI Assistant</a></li>
+          <li><a href="#" class="login-btn">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h2 class="section-title">Medical Learning Hub</h2>
+      <p class="section-subtitle">Enhance your medical knowledge with our comprehensive resources and quizzes.</p>
+
+      <!-- Level Selection Section -->
+      <div class="level-selection-section">
+        <h3>Browse Lessons by Level</h3>
+        <p>Select your proficiency level to view relevant medical lessons:</p>
+        <div class="levels-container" id="lessons-container">
+          <div class="level-selection">
+            <button class="lesson-level-btn active" data-level="Level 1: Medical Basics">Level 1: Medical Basics</button>
+            <button class="lesson-level-btn" data-level="Level 2: Body Systems">Level 2: Body Systems</button>
+            <button class="lesson-level-btn" data-level="Level 3: Disease and Pathology">Level 3: Disease and Pathology</button>
+            <button class="lesson-level-btn" data-level="Level 4: Diagnostics and Patient Care">Level 4: Diagnostics and Patient Care</button>
+            <button class="lesson-level-btn" data-level="Level 5: Advanced Medical Sciences">Level 5: Advanced Medical Sciences</button>
+          </div>
+          <div class="level-content" data-level="Level 1: Medical Basics">
+            <p class="level-description">Fundamental concepts for beginners in medical studies. Learn the basic terminology, structure, and functions of the human body.</p>
+            <!-- Lessons will be loaded here by JavaScript -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Virtual Simulation Section -->
+      <div class="simulation-section">
+        <h3>Virtual Medical Simulation</h3>
+        <p>Experience real-time medical scenarios with our interactive simulation system.</p>
+
+        <div class="simulation-container">
+          <!-- Organ Selection Sidebar -->
+          <aside class="sidebar">
+              <div class="organ-selection">
+                  <h4>Select System</h4>
+                  <div class="organ-buttons">
+                      <button class="organ-btn" data-organ="heart">
+                          <i class="icon-heart"></i>
+                          <span>Cardiovascular System</span>
+                      </button>
+                      <button class="organ-btn" data-organ="brain">
+                          <i class="icon-brain"></i>
+                          <span>Nervous System</span>
+                      </button>
+                      <button class="organ-btn" data-organ="lungs">
+                          <i class="icon-lungs"></i>
+                          <span>Respiratory System</span>
+                      </button>
+                  </div>
+              </div>
+          </aside>
+
+          <!-- Main Simulation Area -->
+          <section class="simulation-area">
+              <div class="simulation-header">
+                  <h4 id="selected-organ-title">Select a System to Begin</h4>
+                  <div class="simulation-controls">
+                      <button id="start-btn" class="control-btn" disabled>
+                          <i class="icon-play"></i>
+                          Start
+                      </button>
+                      <button id="reset-btn" class="control-btn" disabled>
+                          <i class="icon-reset"></i>
+                          Reset
+                      </button>
+                  </div>
+              </div>
+
+              <div class="scenarios">
+                  <h4>Scenarios</h4>
+                  <div class="scenario-grid">
+                      <button class="scenario-btn" data-scenario="normal">
+                          Normal Sinus Rhythm
+                      </button>
+                      <button class="scenario-btn" data-scenario="tachycardia">
+                          Tachycardia
+                      </button>
+                      <button class="scenario-btn" data-scenario="bradycardia">
+                          Bradycardia
+                      </button>
+                      <button class="scenario-btn" data-scenario="hypertensive">
+                          Hypertensive Crisis
+                      </button>
+                  </div>
+              </div>
+
+              <div class="vital-signs-monitor">
+                  <h4>Vital Signs Monitor</h4>
+                  <div class="vitals-grid">
+                      <div class="vital-box">
+                          <div class="vital-label">Heart Rate</div>
+                          <div class="vital-value" id="heart-rate">-- BPM</div>
+                      </div>
+                      <div class="vital-box">
+                          <div class="vital-label">Blood Pressure</div>
+                          <div class="vital-value" id="blood-pressure">--/-- mmHg</div>
+                      </div>
+                      <div class="vital-box">
+                          <div class="vital-label">O₂ Saturation</div>
+                          <div class="vital-value" id="oxygen">--%</div>
+                      </div>
+                      <div class="vital-box">
+                          <div class="vital-label">Temperature</div>
+                          <div class="vital-value" id="temperature">--°C</div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3>Medical Quizzes</h3>
+        <p>Test your knowledge with our professionally designed quizzes covering various medical topics.</p>
+
+        <div class="quiz-filter">
+          <button class="quiz-filter-btn active" data-category="all">All Categories</button>
+          <button class="quiz-filter-btn" data-category="anatomy">Anatomy</button>
+          <button class="quiz-filter-btn" data-category="physiology">Physiology</button>
+          <button class="quiz-filter-btn" data-category="pharmacology">Pharmacology</button>
+          <button class="quiz-filter-btn" data-category="pathology">Pathology</button>
+          <button class="quiz-filter-btn" data-category="microbiology">Microbiology</button>
+          <button class="quiz-filter-btn" data-category="clinical">Clinical</button>
+          <button class="quiz-filter-btn" data-category="public-health">Public Health</button>
+          <button class="quiz-filter-btn" data-category="ethics">Ethics</button>
+          <button class="quiz-filter-btn" data-category="cardiology">Cardiology</button>
+          <button class="quiz-filter-btn" data-category="pediatrics">Pediatrics</button>
+          <button class="quiz-filter-btn" data-category="psychiatry">Psychiatry</button>
+        </div>
+
+        <div id="quizzes-container">
+          <!-- Quizzes will be populated here by JavaScript -->
+          <div class="loading">Loading quizzes...</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>MediConnect</h3>
+          <p>Bridging the gap between healthcare professionals, students, and patients.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#consultation">Consultation</a></li>
+            <li><a href="learning.html">Learning</a></li>
+            <li><a href="index.html#community">Community</a></li>
+            <li><a href="ai-chat.html">AI Assistant</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p>Email: info@mediconnect.com</p>
+          <p>Phone: +1 (555) 123-4567</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 MediConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Login</h2>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="patient">Patient</button>
+        <button class="tab-btn" data-tab="doctor">Doctor</button>
+        <button class="tab-btn" data-tab="student">Student</button>
+      </div>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required>
+        </div>
+        <button type="submit" class="btn primary">Login</button>
+        <p class="form-footer">Don't have an account? <a href="#">Sign Up</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="medical-quizzes.js"></script>
+  <script src="learning.js"></script>
+  <script src="simulation.js"></script>
+</body>
+</html>

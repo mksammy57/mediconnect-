@@ -1,0 +1,734 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediConnect - Patient Dashboard</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    // Apply role to body for CSS targeting
+    document.addEventListener('DOMContentLoaded', function() {
+      const userJson = localStorage.getItem('user');
+      if (userJson) {
+        try {
+          const user = JSON.parse(userJson);
+          document.body.setAttribute('data-role', user.role);
+
+          // Redirect if wrong role
+          if (user.role !== 'patient') {
+            window.location.href = 'index.html';
+            alert('This page is for patients only.');
+          }
+        } catch (e) {
+          console.error('Error parsing user data:', e);
+        }
+      }
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>MediConnect</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="consultation.html">Consultation</a></li>
+          <li><a href="patient-dashboard.html" class="active">My Dashboard</a></li>
+          <li><a href="ai-chat.html">AI Assistant</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#" class="login-btn">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="dashboard-header">
+        <h2>Patient Dashboard</h2>
+        <div class="user-welcome" id="user-welcome">
+          <!-- User info will be populated here -->
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="dashboard-sidebar">
+          <div class="patient-profile-card">
+            <div class="patient-avatar" id="patient-avatar">P</div>
+            <h3 id="patient-name">Patient Name</h3>
+            <p id="patient-email">patient@example.com</p>
+            <button class="btn secondary" onclick="editProfile()"><i class="fas fa-edit"></i> Edit Profile</button>
+          </div>
+
+          <div class="dashboard-nav">
+            <ul>
+              <li class="active" data-tab="overview"><i class="fas fa-home"></i> Overview</li>
+              <li data-tab="appointments"><i class="fas fa-calendar-check"></i> My Appointments</li>
+              <li data-tab="messages"><i class="fas fa-comment-medical"></i> Messages</li>
+              <li data-tab="health-records"><i class="fas fa-file-medical"></i> Health Records</li>
+              <li data-tab="symptom-checker"><i class="fas fa-stethoscope"></i> Symptom Checker</li>
+              <li data-tab="settings"><i class="fas fa-cog"></i> Settings</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="dashboard-content">
+          <!-- Overview Tab -->
+          <div class="dashboard-tab active" id="overview">
+            <div class="quick-actions">
+              <h3>Quick Actions</h3>
+              <div class="quick-action-grid">
+                <div class="quick-action-card" onclick="openTab('appointments')">
+                  <i class="fas fa-calendar-plus"></i>
+                  <span>Book Appointment</span>
+                </div>
+                <div class="quick-action-card" onclick="openTab('symptom-checker')">
+                  <i class="fas fa-stethoscope"></i>
+                  <span>Check Symptoms</span>
+                </div>
+                <div class="quick-action-card" onclick="openTab('messages')">
+                  <i class="fas fa-comment-medical"></i>
+                  <span>Message Doctor</span>
+                </div>
+                <div class="quick-action-card" onclick="window.location.href='ai-chat.html'">
+                  <i class="fas fa-robot"></i>
+                  <span>AI Assistant</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-row">
+              <div class="dashboard-card upcoming-appointment">
+                <h3><i class="fas fa-calendar-check"></i> Upcoming Appointment</h3>
+                <div id="next-appointment">
+                  <p class="no-appointments">No upcoming appointments</p>
+                </div>
+                <button class="btn primary" onclick="openTab('appointments')">Schedule Appointment</button>
+              </div>
+
+              <div class="dashboard-card health-summary">
+                <h3><i class="fas fa-heartbeat"></i> Health Summary</h3>
+                <div class="vital-signs">
+                  <div class="vital-item">
+                    <span class="vital-label">Blood Pressure</span>
+                    <span class="vital-value">120/80 <small>mmHg</small></span>
+                  </div>
+                  <div class="vital-item">
+                    <span class="vital-label">Heart Rate</span>
+                    <span class="vital-value">72 <small>bpm</small></span>
+                  </div>
+                  <div class="vital-item">
+                    <span class="vital-label">Weight</span>
+                    <span class="vital-value">68 <small>kg</small></span>
+                  </div>
+                  <div class="vital-item">
+                    <span class="vital-label">Last Updated</span>
+                    <span class="vital-value">2 weeks ago</span>
+                  </div>
+                </div>
+                <button class="btn secondary" onclick="openTab('health-records')">Update Health Data</button>
+              </div>
+            </div>
+
+            <div class="dashboard-card recent-activity">
+              <h3><i class="fas fa-history"></i> Recent Activity</h3>
+              <ul class="activity-list" id="activity-list">
+                <li class="activity-item">
+                  <div class="activity-icon"><i class="fas fa-calendar-check"></i></div>
+                  <div class="activity-details">
+                    <p class="activity-title">Appointment scheduled with Dr. Sarah Johnson</p>
+                    <p class="activity-time">Yesterday at 2:45 PM</p>
+                  </div>
+                </li>
+                <li class="activity-item">
+                  <div class="activity-icon"><i class="fas fa-pills"></i></div>
+                  <div class="activity-details">
+                    <p class="activity-title">Prescription renewed</p>
+                    <p class="activity-time">3 days ago</p>
+                  </div>
+                </li>
+                <li class="activity-item">
+                  <div class="activity-icon"><i class="fas fa-stethoscope"></i></div>
+                  <div class="activity-details">
+                    <p class="activity-title">Used symptom checker</p>
+                    <p class="activity-time">1 week ago</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Appointments Tab -->
+          <div class="dashboard-tab" id="appointments">
+            <div class="dashboard-header-actions">
+              <h3>My Appointments</h3>
+              <button class="btn primary" id="new-appointment-btn"><i class="fas fa-plus"></i> New Appointment</button>
+            </div>
+
+            <div class="appointments-tabs">
+              <button class="appointment-tab-btn active" data-tab="upcoming">Upcoming</button>
+              <button class="appointment-tab-btn" data-tab="past">Past</button>
+            </div>
+
+            <div class="appointment-tab-content active" id="upcoming">
+              <div class="empty-state" id="no-upcoming-appointments">
+                <i class="fas fa-calendar"></i>
+                <p>You don't have any upcoming appointments</p>
+                <button class="btn secondary" id="book-appointment-btn">Book Now</button>
+              </div>
+              <div class="appointments-list" id="upcoming-appointments">
+                <!-- Appointments will be loaded here -->
+              </div>
+            </div>
+
+            <div class="appointment-tab-content" id="past">
+              <div class="appointments-list" id="past-appointments">
+                <!-- Past appointments will be loaded here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages Tab -->
+          <div class="dashboard-tab" id="messages">
+            <div class="messages-container">
+              <div class="contacts-sidebar">
+                <div class="search-contacts">
+                  <input type="text" placeholder="Search doctors..." id="search-doctors">
+                  <i class="fas fa-search"></i>
+                </div>
+                <div class="contacts-list" id="contacts-list">
+                  <!-- Doctor contacts will be loaded here -->
+                </div>
+              </div>
+              <div class="chat-container" id="chat-container">
+                <div class="empty-chat-state">
+                  <i class="fas fa-comment-medical"></i>
+                  <p>Select a doctor to start messaging</p>
+                </div>
+                <!-- Chat interface will be loaded here when a contact is selected -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Health Records Tab -->
+          <div class="dashboard-tab" id="health-records">
+            <h3>Health Records</h3>
+            
+            <div class="health-records-menu">
+              <button class="health-record-btn active" data-record="medical-history">Medical History</button>
+              <button class="health-record-btn" data-record="lab-results">Lab Results</button>
+              <button class="health-record-btn" data-record="prescriptions">Prescriptions</button>
+              <button class="health-record-btn" data-record="allergies">Allergies</button>
+              <button class="health-record-btn" data-record="immunizations">Immunizations</button>
+            </div>
+            
+            <div class="health-record-content active" id="medical-history">
+              <div class="record-actions">
+                <h4>Medical History</h4>
+                <button class="btn secondary small"><i class="fas fa-plus"></i> Add Entry</button>
+              </div>
+              <div class="medical-history-list">
+                <div class="medical-history-item">
+                  <div class="medical-history-header">
+                    <h5>Seasonal Allergies</h5>
+                    <span class="history-date">Diagnosed: May 2019</span>
+                  </div>
+                  <p>Allergic rhinitis, treated with antihistamines as needed.</p>
+                </div>
+                <div class="medical-history-item">
+                  <div class="medical-history-header">
+                    <h5>Minor Knee Surgery</h5>
+                    <span class="history-date">Procedure: August 2020</span>
+                  </div>
+                  <p>Arthroscopic procedure to repair torn meniscus in right knee.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="health-record-content" id="lab-results">
+              <div class="record-actions">
+                <h4>Lab Results</h4>
+                <button class="btn secondary small"><i class="fas fa-upload"></i> Upload Results</button>
+              </div>
+              <div class="lab-results-list">
+                <div class="lab-result-item">
+                  <div class="lab-result-header">
+                    <h5>Complete Blood Count (CBC)</h5>
+                    <span class="result-date">Date: March 15, 2023</span>
+                  </div>
+                  <div class="lab-values">
+                    <div class="lab-value-item">
+                      <span class="lab-value-name">WBC</span>
+                      <span class="lab-value-result">7.2 x10^9/L</span>
+                      <span class="lab-value-range">Normal Range: 4.5-11.0</span>
+                    </div>
+                    <div class="lab-value-item">
+                      <span class="lab-value-name">RBC</span>
+                      <span class="lab-value-result">5.0 x10^12/L</span>
+                      <span class="lab-value-range">Normal Range: 4.5-5.9</span>
+                    </div>
+                    <div class="lab-value-item">
+                      <span class="lab-value-name">Hemoglobin</span>
+                      <span class="lab-value-result">14.2 g/dL</span>
+                      <span class="lab-value-range">Normal Range: 13.5-17.5</span>
+                    </div>
+                  </div>
+                  <button class="btn text-btn">View Full Results</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="health-record-content" id="prescriptions">
+              <div class="record-actions">
+                <h4>Prescriptions</h4>
+                <button class="btn secondary small"><i class="fas fa-redo"></i> Request Refill</button>
+              </div>
+              <div class="prescriptions-list">
+                <div class="prescription-item active">
+                  <div class="prescription-icon"><i class="fas fa-pills"></i></div>
+                  <div class="prescription-details">
+                    <h5>Loratadine 10mg</h5>
+                    <p>Take 1 tablet daily for allergies</p>
+                    <div class="prescription-meta">
+                      <span><i class="fas fa-user-md"></i> Dr. Sarah Johnson</span>
+                      <span><i class="fas fa-calendar"></i> Refills: 2 remaining</span>
+                      <span><i class="fas fa-clock"></i> Expires: Dec 15, 2023</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="health-record-content" id="allergies">
+              <div class="record-actions">
+                <h4>Allergies</h4>
+                <button class="btn secondary small"><i class="fas fa-plus"></i> Add Allergy</button>
+              </div>
+              <div class="allergies-list">
+                <div class="allergy-item severity-mild">
+                  <div class="allergy-icon"><i class="fas fa-exclamation-circle"></i></div>
+                  <div class="allergy-details">
+                    <h5>Pollen</h5>
+                    <p>Seasonal - causes sneezing, runny nose</p>
+                    <span class="allergy-severity">Mild</span>
+                  </div>
+                </div>
+                <div class="allergy-item severity-moderate">
+                  <div class="allergy-icon"><i class="fas fa-exclamation-circle"></i></div>
+                  <div class="allergy-details">
+                    <h5>Penicillin</h5>
+                    <p>Causes rash and hives</p>
+                    <span class="allergy-severity">Moderate</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="health-record-content" id="immunizations">
+              <div class="record-actions">
+                <h4>Immunizations</h4>
+                <button class="btn secondary small"><i class="fas fa-plus"></i> Add Record</button>
+              </div>
+              <div class="immunizations-list">
+                <div class="immunization-item">
+                  <div class="immunization-icon"><i class="fas fa-syringe"></i></div>
+                  <div class="immunization-details">
+                    <h5>Influenza Vaccine</h5>
+                    <p>Annual flu shot</p>
+                    <span class="immunization-date">Last dose: Oct 10, 2022</span>
+                  </div>
+                </div>
+                <div class="immunization-item">
+                  <div class="immunization-icon"><i class="fas fa-syringe"></i></div>
+                  <div class="immunization-details">
+                    <h5>Tetanus-Diphtheria (Td)</h5>
+                    <p>Booster shot</p>
+                    <span class="immunization-date">Last dose: Jun 15, 2018</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Symptom Checker Tab -->
+          <div class="dashboard-tab" id="symptom-checker">
+            <h3>AI Symptom Checker</h3>
+            <p class="tab-description">Describe your symptoms and our AI will suggest possible diagnoses. This is not a substitute for professional medical advice.</p>
+            
+            <div class="symptom-checker">
+              <div class="symptom-checker-tabs">
+                <button class="tab-btn active" data-tab="text-input">Text Description</button>
+                <button class="tab-btn" data-tab="body-map">Body Map</button>
+                <button class="tab-btn" data-tab="common-symptoms">Common Symptoms</button>
+              </div>
+
+              <div class="symptom-input-container">
+                <!-- Text Input Tab -->
+                <div class="tab-content active" id="text-input">
+                  <form id="symptom-form">
+                    <textarea id="symptoms-textarea" placeholder="Describe your symptoms here... e.g., 'I have a headache, fever, and sore throat for the past 2 days'" required></textarea>
+                    <div class="symptom-details">
+                      <div class="form-group">
+                        <label for="symptom-duration">Duration:</label>
+                        <select id="symptom-duration">
+                          <option value="">Select duration</option>
+                          <option value="hours">Hours</option>
+                          <option value="days">Days</option>
+                          <option value="weeks">Weeks</option>
+                          <option value="months">Months</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="symptom-severity">Severity:</label>
+                        <div class="severity-slider">
+                          <span>Mild</span>
+                          <input type="range" id="symptom-severity" min="1" max="10" value="5">
+                          <span>Severe</span>
+                        </div>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn primary"><i class="fas fa-search"></i> Analyze Symptoms</button>
+                  </form>
+                </div>
+
+                <!-- Body Map Tab -->
+                <div class="tab-content" id="body-map">
+                  <p>Click on the body areas where you're experiencing symptoms:</p>
+                  <div class="body-map-container">
+                    <div class="body-map">
+                      <img src="https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584_1280.png" alt="Human body outline">
+                      <div class="body-part" data-part="head" style="top: 5%; left: 50%; width: 15%; height: 15%;"></div>
+                      <div class="body-part" data-part="chest" style="top: 25%; left: 50%; width: 20%; height: 15%;"></div>
+                      <div class="body-part" data-part="abdomen" style="top: 40%; left: 50%; width: 20%; height: 15%;"></div>
+                      <div class="body-part" data-part="left-arm" style="top: 30%; left: 30%; width: 10%; height: 25%;"></div>
+                      <div class="body-part" data-part="right-arm" style="top: 30%; left: 70%; width: 10%; height: 25%;"></div>
+                      <div class="body-part" data-part="left-leg" style="top: 65%; left: 45%; width: 10%; height: 30%;"></div>
+                      <div class="body-part" data-part="right-leg" style="top: 65%; left: 55%; width: 10%; height: 30%;"></div>
+                    </div>
+                    <div class="selected-body-parts">
+                      <h4>Selected areas:</h4>
+                      <ul id="selected-parts-list"></ul>
+                      <button id="analyze-body-parts" class="btn primary" disabled><i class="fas fa-search"></i> Analyze Selected Areas</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Common Symptoms Tab -->
+                <div class="tab-content" id="common-symptoms">
+                  <p>Select the symptoms you're experiencing:</p>
+                  <div class="common-symptoms-list">
+                    <div class="symptom-category">
+                      <h4>General</h4>
+                      <div class="symptom-checkboxes">
+                        <label><input type="checkbox" value="fever"> Fever</label>
+                        <label><input type="checkbox" value="fatigue"> Fatigue</label>
+                        <label><input type="checkbox" value="chills"> Chills</label>
+                        <label><input type="checkbox" value="weakness"> Weakness</label>
+                      </div>
+                    </div>
+                    <div class="symptom-category">
+                      <h4>Head</h4>
+                      <div class="symptom-checkboxes">
+                        <label><input type="checkbox" value="headache"> Headache</label>
+                        <label><input type="checkbox" value="dizziness"> Dizziness</label>
+                        <label><input type="checkbox" value="lightheadedness"> Lightheadedness</label>
+                      </div>
+                    </div>
+                    <div class="symptom-category">
+                      <h4>Respiratory</h4>
+                      <div class="symptom-checkboxes">
+                        <label><input type="checkbox" value="cough"> Cough</label>
+                        <label><input type="checkbox" value="shortness of breath"> Shortness of breath</label>
+                        <label><input type="checkbox" value="sore throat"> Sore throat</label>
+                        <label><input type="checkbox" value="runny nose"> Runny nose</label>
+                      </div>
+                    </div>
+                    <div class="symptom-category">
+                      <h4>Digestive</h4>
+                      <div class="symptom-checkboxes">
+                        <label><input type="checkbox" value="nausea"> Nausea</label>
+                        <label><input type="checkbox" value="vomiting"> Vomiting</label>
+                        <label><input type="checkbox" value="diarrhea"> Diarrhea</label>
+                        <label><input type="checkbox" value="stomach pain"> Stomach pain</label>
+                      </div>
+                    </div>
+                    <button id="analyze-common-symptoms" class="btn primary"><i class="fas fa-search"></i> Analyze Selected Symptoms</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="results" style="display: none;">
+                <div class="results-header">
+                  <h4>Analysis Results</h4>
+                  <span class="disclaimer-label">For educational purposes only</span>
+                </div>
+                <div class="conditions-section">
+                  <h5>Possible Conditions:</h5>
+                  <ul id="conditions-list"></ul>
+                </div>
+                <div class="recommendations-section">
+                  <h5>Recommendations:</h5>
+                  <ul id="recommendations-list"></ul>
+                </div>
+                <div class="emergency-warning" style="display: none;">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  <strong>WARNING:</strong> Your symptoms may indicate a serious condition that requires immediate medical attention. Please contact emergency services or go to the nearest emergency room.
+                </div>
+                <div class="next-steps">
+                  <h5>Next Steps:</h5>
+                  <div class="next-steps-buttons">
+                    <button id="find-doctor-btn" class="btn secondary"><i class="fas fa-user-md"></i> Find a Doctor</button>
+                    <button id="save-results-btn" class="btn secondary"><i class="fas fa-save"></i> Save Results</button>
+                    <button id="clear-symptoms-btn" class="btn secondary"><i class="fas fa-redo"></i> Start Over</button>
+                  </div>
+                </div>
+                <p class="disclaimer">Note: This is not a diagnosis. The symptom checker is for informational purposes only and should not replace professional medical advice, diagnosis, or treatment. Always consult with a qualified healthcare provider for medical advice.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings Tab -->
+          <div class="dashboard-tab" id="settings">
+            <h3>Account Settings</h3>
+            
+            <div class="settings-sections">
+              <div class="settings-section">
+                <h4>Personal Information</h4>
+                <form id="personal-info-form">
+                  <div class="form-group">
+                    <label for="full-name">Full Name</label>
+                    <input type="text" id="full-name" value="John Doe">
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="date-of-birth">Date of Birth</label>
+                      <input type="date" id="date-of-birth" value="1990-01-15">
+                    </div>
+                    <div class="form-group">
+                      <label for="gender">Gender</label>
+                      <select id="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer-not">Prefer not to say</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="contact-email">Email</label>
+                    <input type="email" id="contact-email" value="john.doe@example.com">
+                  </div>
+                  <div class="form-group">
+                    <label for="contact-phone">Phone</label>
+                    <input type="tel" id="contact-phone" value="+1 (555) 123-4567">
+                  </div>
+                  <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address">123 Health Street, Medical City, MC 12345</textarea>
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="btn primary">Save Changes</button>
+                  </div>
+                </form>
+              </div>
+              
+              <div class="settings-section">
+                <h4>Password & Security</h4>
+                <form id="security-form">
+                  <div class="form-group">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" id="current-password">
+                  </div>
+                  <div class="form-group">
+                    <label for="new-password">New Password</label>
+                    <input type="password" id="new-password">
+                  </div>
+                  <div class="form-group">
+                    <label for="confirm-password">Confirm New Password</label>
+                    <input type="password" id="confirm-password">
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="btn primary">Update Password</button>
+                  </div>
+                </form>
+              </div>
+              
+              <div class="settings-section">
+                <h4>Notification Preferences</h4>
+                <form id="notification-form">
+                  <div class="checkbox-group">
+                    <label>
+                      <input type="checkbox" checked> Email notifications for appointment reminders
+                    </label>
+                  </div>
+                  <div class="checkbox-group">
+                    <label>
+                      <input type="checkbox" checked> SMS notifications for appointment reminders
+                    </label>
+                  </div>
+                  <div class="checkbox-group">
+                    <label>
+                      <input type="checkbox" checked> Email notifications for new messages
+                    </label>
+                  </div>
+                  <div class="checkbox-group">
+                    <label>
+                      <input type="checkbox"> Weekly health tips
+                    </label>
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="btn primary">Save Preferences</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Doctor Chat Modal -->
+    <div class="doctor-chat-modal" id="doctor-chat-modal" style="display: none;">
+      <div class="chat-window-header">
+        <div class="chat-user-info">
+          <button class="back-button" id="close-chat-modal"><i class="fas fa-arrow-left"></i></button>
+          <div class="doctor-chat-avatar" id="modal-doctor-avatar">D</div>
+          <div class="doctor-chat-info">
+            <h4 class="doctor-chat-name" id="modal-doctor-name">Dr. Name</h4>
+            <p class="doctor-chat-status" id="modal-doctor-status">Online • Typically replies within 5 minutes</p>
+          </div>
+        </div>
+        <div class="chat-options">
+          <i class="fas fa-video" id="start-video-call"></i>
+          <i class="fas fa-phone" id="start-voice-call"></i>
+          <i class="fas fa-ellipsis-v"></i>
+        </div>
+      </div>
+
+      <div class="chat-messages-container" id="modal-chat-messages">
+        <!-- Chat messages will appear here -->
+      </div>
+
+      <div class="chat-input-area">
+        <i class="fas fa-smile"></i>
+        <i class="fas fa-paperclip"></i>
+        <input type="text" id="modal-chat-input" placeholder="Type a message...">
+        <button id="modal-send-message-btn"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+
+    <!-- Video Call Modal -->
+    <div class="video-call-modal" id="video-call-modal" style="display: none;">
+      <div class="video-call-container">
+        <div class="video-call-header">
+          <h3>Video Call with <span id="video-call-doctor-name">Dr. Name</span></h3>
+          <button class="close-video-call"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="video-main">
+          <div class="video-large">
+            <div class="video-placeholder">
+              <i class="fas fa-user-md"></i>
+              <p>Connecting to doctor...</p>
+            </div>
+          </div>
+          <div class="video-small">
+            <div class="video-placeholder self-video">
+              <i class="fas fa-user"></i>
+              <p>You</p>
+            </div>
+          </div>
+        </div>
+        <div class="video-controls">
+          <button class="control-btn mute-btn" title="Mute"><i class="fas fa-microphone"></i></button>
+          <button class="control-btn video-off-btn" title="Turn off camera"><i class="fas fa-video"></i></button>
+          <button class="control-btn screen-share-btn" title="Share screen"><i class="fas fa-desktop"></i></button>
+          <button class="control-btn end-call" title="End call"><i class="fas fa-phone-slash"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Voice Call Modal -->
+    <div class="voice-call-modal" id="voice-call-modal" style="display: none;">
+      <div class="voice-call-container">
+        <div class="voice-call-header">
+          <h3>Voice Call with <span id="voice-call-doctor-name">Dr. Name</span></h3>
+          <button class="close-voice-call"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="voice-call-content">
+          <div class="doctor-avatar large" id="voice-call-doctor-avatar">D</div>
+          <p class="doctor-name" id="voice-call-doctor-display">Dr. Name</p>
+          <p class="call-status">Calling...</p>
+          <p class="call-duration">00:00</p>
+        </div>
+        <div class="voice-call-controls">
+          <button class="control-btn mute-btn" title="Mute"><i class="fas fa-microphone"></i></button>
+          <button class="control-btn speaker-btn" title="Speaker"><i class="fas fa-volume-up"></i></button>
+          <button class="control-btn end-call" title="End Call"><i class="fas fa-phone-slash"></i></button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>MediConnect</h3>
+          <p>Bridging the gap between healthcare professionals, students, and patients.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="consultation.html">Consultation</a></li>
+            <li><a href="learning.html">Learning</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="ai-chat.html">AI Assistant</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p>Email: info@mediconnect.com</p>
+          <p>Phone: +1 (555) 123-4567</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 MediConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Login</h2>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="patient">Patient</button>
+        <button class="tab-btn" data-tab="doctor">Doctor</button>
+        <button class="tab-btn" data-tab="student">Student</button>
+      </div>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required>
+        </div>
+        <button type="submit" class="btn primary">Login</button>
+        <p class="form-footer">Don't have an account? <a href="#">Sign Up</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="patient-dashboard.js"></script>
+</body>
+</html>

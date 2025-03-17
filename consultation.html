@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  // Apply role to body for CSS targeting
+  document.addEventListener('DOMContentLoaded', function() {
+    const userJson = localStorage.getItem('user');
+    if (userJson) {
+      try {
+        const user = JSON.parse(userJson);
+        document.body.setAttribute('data-role', user.role);
+
+        // Redirect if wrong role
+        if (user.role === 'student') {
+          window.location.href = 'learning.html';
+          alert('This page is for patients and doctors only. Redirecting to learning page.');
+        }
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+      }
+    }
+  });
+</script>
+
+  <title>MediConnect - Consultation</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>MediConnect</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="consultation.html" class="active">Consultation</a></li>
+          <li><a href="learning.html">Learning</a></li>
+          <li><a href="community.html">Community</a></li>
+          <li><a href="ai-chat.html">AI Assistant</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#" class="login-btn">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h2 class="section-title">Online Consultation</h2>
+
+      <div class="symptom-checker">
+        <h3><i class="fas fa-stethoscope"></i> AI Symptom Checker</h3>
+        <p>Describe your symptoms and our AI will suggest possible diagnoses. This is not a substitute for professional medical advice.</p>
+
+        <div class="symptom-checker-tabs">
+          <button class="tab-btn active" data-tab="text-input">Text Description</button>
+          <button class="tab-btn" data-tab="body-map">Body Map</button>
+          <button class="tab-btn" data-tab="common-symptoms">Common Symptoms</button>
+        </div>
+
+        <div class="symptom-input-container">
+          <!-- Text Input Tab -->
+          <div class="tab-content active" id="text-input">
+            <form id="symptom-form">
+              <textarea id="symptoms-textarea" placeholder="Describe your symptoms here... e.g., 'I have a headache, fever, and sore throat for the past 2 days'" required></textarea>
+              <div class="symptom-details">
+                <div class="form-group">
+                  <label for="symptom-duration">Duration:</label>
+                  <select id="symptom-duration">
+                    <option value="">Select duration</option>
+                    <option value="hours">Hours</option>
+                    <option value="days">Days</option>
+                    <option value="weeks">Weeks</option>
+                    <option value="months">Months</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="symptom-severity">Severity:</label>
+                  <div class="severity-slider">
+                    <span>Mild</span>
+                    <input type="range" id="symptom-severity" min="1" max="10" value="5">
+                    <span>Severe</span>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn primary"><i class="fas fa-search"></i> Analyze Symptoms</button>
+            </form>
+          </div>
+
+          <!-- Body Map Tab -->
+          <div class="tab-content" id="body-map">
+            <p>Click on the body areas where you're experiencing symptoms:</p>
+            <div class="body-map-container">
+              <div class="body-map">
+                <img src="https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584_1280.png" alt="Human body outline">
+                <div class="body-part" data-part="head" style="top: 5%; left: 50%; width: 15%; height: 15%;"></div>
+                <div class="body-part" data-part="chest" style="top: 25%; left: 50%; width: 20%; height: 15%;"></div>
+                <div class="body-part" data-part="abdomen" style="top: 40%; left: 50%; width: 20%; height: 15%;"></div>
+                <div class="body-part" data-part="left-arm" style="top: 30%; left: 30%; width: 10%; height: 25%;"></div>
+                <div class="body-part" data-part="right-arm" style="top: 30%; left: 70%; width: 10%; height: 25%;"></div>
+                <div class="body-part" data-part="left-leg" style="top: 65%; left: 45%; width: 10%; height: 30%;"></div>
+                <div class="body-part" data-part="right-leg" style="top: 65%; left: 55%; width: 10%; height: 30%;"></div>
+              </div>
+              <div class="selected-body-parts">
+                <h4>Selected areas:</h4>
+                <ul id="selected-parts-list"></ul>
+                <button id="analyze-body-parts" class="btn primary" disabled><i class="fas fa-search"></i> Analyze Selected Areas</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Common Symptoms Tab -->
+          <div class="tab-content" id="common-symptoms">
+            <p>Select the symptoms you're experiencing:</p>
+            <div class="common-symptoms-list">
+              <div class="symptom-category">
+                <h4>General</h4>
+                <div class="symptom-checkboxes">
+                  <label><input type="checkbox" value="fever"> Fever</label>
+                  <label><input type="checkbox" value="fatigue"> Fatigue</label>
+                  <label><input type="checkbox" value="chills"> Chills</label>
+                  <label><input type="checkbox" value="weakness"> Weakness</label>
+                </div>
+              </div>
+              <div class="symptom-category">
+                <h4>Head</h4>
+                <div class="symptom-checkboxes">
+                  <label><input type="checkbox" value="headache"> Headache</label>
+                  <label><input type="checkbox" value="dizziness"> Dizziness</label>
+                  <label><input type="checkbox" value="lightheadedness"> Lightheadedness</label>
+                </div>
+              </div>
+              <div class="symptom-category">
+                <h4>Respiratory</h4>
+                <div class="symptom-checkboxes">
+                  <label><input type="checkbox" value="cough"> Cough</label>
+                  <label><input type="checkbox" value="shortness of breath"> Shortness of breath</label>
+                  <label><input type="checkbox" value="sore throat"> Sore throat</label>
+                  <label><input type="checkbox" value="runny nose"> Runny nose</label>
+                </div>
+              </div>
+              <div class="symptom-category">
+                <h4>Digestive</h4>
+                <div class="symptom-checkboxes">
+                  <label><input type="checkbox" value="nausea"> Nausea</label>
+                  <label><input type="checkbox" value="vomiting"> Vomiting</label>
+                  <label><input type="checkbox" value="diarrhea"> Diarrhea</label>
+                  <label><input type="checkbox" value="stomach pain"> Stomach pain</label>
+                </div>
+              </div>
+              <button id="analyze-common-symptoms" class="btn primary"><i class="fas fa-search"></i> Analyze Selected Symptoms</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="results" style="display: none;">
+          <div class="results-header">
+            <h4>Analysis Results</h4>
+            <span class="disclaimer-label">For educational purposes only</span>
+          </div>
+          <div class="conditions-section">
+            <h5>Possible Conditions:</h5>
+            <ul id="conditions-list"></ul>
+          </div>
+          <div class="recommendations-section">
+            <h5>Recommendations:</h5>
+            <ul id="recommendations-list"></ul>
+          </div>
+          <div class="emergency-warning" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>WARNING:</strong> Your symptoms may indicate a serious condition that requires immediate medical attention. Please contact emergency services or go to the nearest emergency room.
+          </div>
+          <div class="next-steps">
+            <h5>Next Steps:</h5>
+            <div class="next-steps-buttons">
+              <button id="find-doctor-btn" class="btn secondary"><i class="fas fa-user-md"></i> Find a Doctor</button>
+              <button id="save-results-btn" class="btn secondary"><i class="fas fa-save"></i> Save Results</button>
+              <button id="clear-symptoms-btn" class="btn secondary"><i class="fas fa-redo"></i> Start Over</button>
+            </div>
+          </div>
+          <p class="disclaimer">Note: This is not a diagnosis. The symptom checker is for informational purposes only and should not replace professional medical advice, diagnosis, or treatment. Always consult with a qualified healthcare provider for medical advice.</p>
+        </div>
+      </div>
+
+      <div class="active-filters" style="display: none;"></div>
+
+      <div class="consultation-container">
+        <div class="filters-sidebar">
+          <div class="filters-card">
+            <h3>Find The Right Doctor</h3>
+            <form id="filters-form">
+              <div class="filter-group">
+                <h4>Specialty</h4>
+                <div class="filter-options">
+                  <label><input type="checkbox" name="specialization" value="cardiology"> Cardiology</label>
+                  <label><input type="checkbox" name="specialization" value="dermatology"> Dermatology</label>
+                  <label><input type="checkbox" name="specialization" value="neurology"> Neurology</label>
+                  <label><input type="checkbox" name="specialization" value="pediatrics"> Pediatrics</label>
+                  <label><input type="checkbox" name="specialization" value="psychiatry"> Psychiatry</label>
+                  <label><input type="checkbox" name="specialization" value="orthopedics"> Orthopedics</label>
+                  <label><input type="checkbox" name="specialization" value="gynecology"> Obstetrics & Gynecology</label>
+                  <label><input type="checkbox" name="specialization" value="internal"> Internal Medicine</label>
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <h4>Availability</h4>
+                <div class="filter-options">
+                  <label><input type="checkbox" name="availability" value="today"> Available Today</label>
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <h4>Consultation Type</h4>
+                <div class="filter-options">
+                  <label><input type="checkbox" name="type" value="video"> Video Call</label>
+                  <label><input type="checkbox" name="type" value="voice"> Voice Call</label>
+                  <label><input type="checkbox" name="type" value="chat"> Chat</label>
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <h4>Rating</h4>
+                <div class="filter-options">
+                  <label><input type="radio" name="rating" value="5"> 5 Stars</label>
+                  <label><input type="radio" name="rating" value="4.5"> 4.5+ Stars</label>
+                  <label><input type="radio" name="rating" value="4"> 4+ Stars</label>
+                  <label><input type="radio" name="rating" value="0"> All Ratings</label>
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <h4>Price</h4>
+                <div class="filter-options">
+                  <select name="price" class="price-filter">
+                    <option value="">Any Price</option>
+                    <option value="under-90">Under $90</option>
+                    <option value="90-100">$90 - $100</option>
+                    <option value="over-100">Over $100</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="filter-actions">
+                <button type="button" id="apply-filters" class="btn primary">Apply Filters</button>
+                <button type="button" id="reset-filters" class="btn secondary">Reset</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="doctors-container" id="doctors-list">
+          <!-- Doctors will be loaded dynamically -->
+          <div class="loading-doctors">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading doctors...</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="booking-form" class="booking-form" style="display: none;">
+        <h3>Book Your Appointment</h3>
+
+        <div class="booking-doctor-info">
+          <!-- Doctor info will be inserted here dynamically -->
+        </div>
+
+        <form id="appointment-form">
+          <input type="hidden" id="doctor-id" name="doctor-id">
+          <input type="hidden" id="selected-time" name="selected-time">
+
+          <div class="form-section">
+            <h4>1. Select Date & Time</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="appointment-date">Date</label>
+                <input type="date" id="appointment-date" name="appointment-date" required>
+              </div>
+
+              <div class="form-group">
+                <label for="consultation-type">Consultation Type</label>
+                <select id="consultation-type" name="consultation-type" required>
+                  <!-- Options will be populated based on doctor's available types -->
+                </select>
+              </div>
+            </div>
+
+            <div class="time-slots-container">
+              <!-- Time slots will be populated dynamically -->
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4>2. Describe Your Symptoms</h4>
+            <textarea id="symptoms" name="symptoms" placeholder="Please describe your symptoms or reason for consultation..." rows="4" required></textarea>
+          </div>
+
+          <div class="form-section">
+            <h4>3. Your Information</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="patient-name">Full Name</label>
+                <input type="text" id="patient-name" name="patient-name" required>
+              </div>
+
+              <div class="form-group">
+                <label for="patient-email">Email</label>
+                <input type="email" id="patient-email" name="patient-email" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="patient-phone">Phone Number</label>
+                <input type="tel" id="patient-phone" name="patient-phone">
+              </div>
+
+              <div class="form-group">
+                <label for="patient-dob">Date of Birth</label>
+                <input type="date" id="patient-dob" name="patient-dob">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" id="cancel-booking" class="btn secondary">Cancel</button>
+            <button type="submit" class="btn primary">Confirm Booking</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- WhatsApp-style Doctor Chat Interface -->
+    <div class="doctor-chat-container" id="doctor-chat-window" style="display: none;">
+      <div class="chat-window-header">
+        <div class="chat-user-info">
+          <button class="back-button" id="close-chat"><i class="fas fa-arrow-left"></i></button>
+          <div class="doctor-chat-avatar"></div>
+          <div class="doctor-chat-info">
+            <h4 class="doctor-chat-name">Dr. Sarah Johnson</h4>
+            <p class="doctor-chat-status">Online • Typically replies within 5 minutes</p>
+          </div>
+        </div>
+        <div class="chat-options">
+          <i class="fas fa-video"></i>
+          <i class="fas fa-phone"></i>
+          <i class="fas fa-ellipsis-v"></i>
+        </div>
+      </div>
+
+      <div class="chat-messages-container" id="doctor-chat-messages">
+        <div class="chat-date-divider">Today</div>
+        <div class="chat-message doctor">
+          <div class="message-content">Hi there! I'm Dr. Sarah Johnson. How can I help you today?</div>
+          <div class="message-time">10:32 AM</div>
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <i class="fas fa-smile"></i>
+        <i class="fas fa-paperclip"></i>
+        <input type="text" id="doctor-chat-input" placeholder="Type a message...">
+        <button id="send-message-btn"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>MediConnect</h3>
+          <p>Bridging the gap between healthcare professionals, students, and patients.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="consultation.html">Consultation</a></li>
+            <li><a href="learning.html">Learning</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="ai-chat.html">AI Assistant</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p>Email: info@mediconnect.com</p>
+          <p>Phone: +1 (555) 123-4567</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 MediConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Login</h2>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="patient">Patient</button>
+        <button class="tab-btn" data-tab="doctor">Doctor</button>
+        <button class="tab-btn" data-tab="student">Student</button>
+      </div>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required>
+        </div>
+        <button type="submit" class="btn primary">Login</button>
+        <p class="form-footer">Don't have an account? <a href="#">Sign Up</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="consultation.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "medical-website",
+  "version": "1.0.0",
+  "description": "Medical website with Django backend and JavaScript frontend",
+  "main": "server.js",
+  "scripts": {
+    "start": "bash start.sh",
+    "server": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "http-proxy-middleware": "^2.0.6"
+  }
+}

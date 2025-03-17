@@ -1,0 +1,949 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Dashboard - MediConnect</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body data-role="doctor">
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>MediConnect</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#" class="active">Dashboard</a></li>
+          <li><a href="learning.html">Resources</a></li>
+          <li><a href="ai-chat.html">AI Assistant</a></li>
+          <li>
+            <div class="user-profile-nav">
+              <a href="#" class="login-btn logged-in" id="user-menu-toggle">
+                <i class="fas fa-user-md"></i> <span id="doctor-name">Dr. Smith</span>
+              </a>
+              <div class="user-menu" style="display: none;">
+                <ul>
+                  <li><a href="doctor-dashboard.html"><i class="fas fa-columns"></i> Dashboard</a></li>
+                  <li><a href="#"><i class="fas fa-user-circle"></i> Profile</a></li>
+                  <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                  <li><a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <!-- Doctor Dashboard Main Container -->
+      <div class="doctor-dashboard">
+        <!-- Sidebar with Doctor Profile & Navigation -->
+        <div class="doctor-sidebar">
+          <div class="doctor-profile">
+            <div class="doctor-avatar large">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Doctor Avatar">
+            </div>
+            <h3 id="doctor-name-greeting">Dr. Smith</h3>
+            <p class="doctor-specialty">Cardiologist</p>
+            <div class="doctor-status">
+              <span class="status-indicator online"></span> Online
+            </div>
+          </div>
+          <div class="sidebar-menu">
+            <a href="#" class="active" data-tab="overview"><i class="fas fa-home"></i> Overview</a>
+            <a href="#" data-tab="appointments"><i class="fas fa-calendar-check"></i> Appointments <span class="badge">3</span></a>
+            <a href="#" data-tab="messages"><i class="fas fa-comment-medical"></i> Messages <span class="badge">2</span></a>
+            <a href="#" data-tab="patients"><i class="fas fa-user-injured"></i> Patients</a>
+            <a href="#" data-tab="prescriptions"><i class="fas fa-prescription"></i> Prescriptions</a>
+            <a href="#" data-tab="schedule"><i class="fas fa-calendar-alt"></i> Schedule</a>
+            <a href="#" data-tab="reports"><i class="fas fa-chart-line"></i> Reports</a>
+            <a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a>
+          </div>
+        </div>
+
+        <!-- Dashboard Content Area -->
+        <div class="dashboard-content">
+          <!-- Overview Tab -->
+          <div class="dashboard-tab active" id="overview">
+            <h2>Welcome, <span id="doctor-name">Dr. Smith</span></h2>
+            <p class="date-today" id="current-date">Monday, June 5, 2023</p>
+            
+            <!-- Quick Actions Section -->
+            <div class="section quick-actions">
+              <div class="section-header">
+                <h3>Quick Actions</h3>
+              </div>
+              <div class="quick-actions-grid">
+                <button class="quick-action-btn" data-action="start-next-appointment">
+                  <i class="fas fa-video"></i>
+                  <span>Start Next Appointment</span>
+                </button>
+                <button class="quick-action-btn" data-action="respond-messages">
+                  <i class="fas fa-comment-dots"></i>
+                  <span>Respond to Messages</span>
+                </button>
+                <button class="quick-action-btn" data-action="view-todays-schedule">
+                  <i class="fas fa-calendar-day"></i>
+                  <span>Today's Schedule</span>
+                </button>
+                <button class="quick-action-btn" data-action="patient-records">
+                  <i class="fas fa-file-medical"></i>
+                  <span>Patient Records</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="stats-container">
+              <div class="stat-card">
+                <i class="fas fa-user-clock"></i>
+                <div class="stat-info">
+                  <h3>8</h3>
+                  <p>Appointments Today</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <i class="fas fa-comment-medical"></i>
+                <div class="stat-info">
+                  <h3>12</h3>
+                  <p>New Messages</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <i class="fas fa-file-prescription"></i>
+                <div class="stat-info">
+                  <h3>5</h3>
+                  <p>Pending Prescriptions</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <i class="fas fa-user-plus"></i>
+                <div class="stat-info">
+                  <h3>3</h3>
+                  <p>New Patients</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Main Dashboard Sections -->
+            <div class="dashboard-sections">
+              <!-- Today's Appointments -->
+              <div class="section">
+                <div class="section-header">
+                  <h3>Today's Appointments</h3>
+                  <a href="#" class="view-all" data-tab="appointments">View All</a>
+                </div>
+                <div class="appointment-list">
+                  <!-- Will be populated by JavaScript -->
+                </div>
+              </div>
+
+              <!-- Recent Messages -->
+              <div class="section">
+                <div class="section-header">
+                  <h3>Recent Messages</h3>
+                  <a href="#" class="view-all" data-tab="messages">View All</a>
+                </div>
+                <div class="messages-list">
+                  <!-- Will be populated by JavaScript -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Schedule Section -->
+            <div class="section">
+              <div class="section-header">
+                <h3>Today's Schedule</h3>
+                <a href="#" class="view-all" data-tab="schedule">View Full Schedule</a>
+              </div>
+              <div class="daily-schedule">
+                <div class="time-slots">
+                  <!-- Will be populated by JavaScript -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Pending Prescriptions Section -->
+            <div class="section">
+              <div class="section-header">
+                <h3>Pending Prescriptions</h3>
+                <a href="#" class="view-all" data-tab="prescriptions">View All Prescriptions</a>
+              </div>
+              <div class="prescriptions-list">
+                <div class="prescription-card">
+                  <div class="prescription-patient-info">
+                    <div class="patient-avatar">
+                      <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="James Brown">
+                    </div>
+                    <div>
+                      <h4>James Brown</h4>
+                      <p>Requested: Jun 4, 2023</p>
+                    </div>
+                  </div>
+                  <div class="prescription-details">
+                    <p>Medication: Lisinopril 10mg</p>
+                    <p>Refill Request</p>
+                  </div>
+                  <div class="prescription-actions">
+                    <button class="btn primary small">Approve</button>
+                    <button class="btn secondary small">Review</button>
+                  </div>
+                </div>
+                <div class="prescription-card">
+                  <div class="prescription-patient-info">
+                    <div class="patient-avatar">
+                      <img src="https://randomuser.me/api/portraits/women/67.jpg" alt="Emily Wilson">
+                    </div>
+                    <div>
+                      <h4>Emily Wilson</h4>
+                      <p>Requested: Jun 5, 2023</p>
+                    </div>
+                  </div>
+                  <div class="prescription-details">
+                    <p>Medication: Metformin 500mg</p>
+                    <p>New Prescription</p>
+                  </div>
+                  <div class="prescription-actions">
+                    <button class="btn primary small">Approve</button>
+                    <button class="btn secondary small">Review</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Appointments Tab -->
+          <div class="dashboard-tab" id="appointments">
+            <h2>Appointments</h2>
+            <div class="appointments-filter">
+              <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="upcoming">Upcoming</button>
+                <button class="filter-tab" data-filter="past">Past</button>
+                <button class="filter-tab" data-filter="cancelled">Cancelled</button>
+                <button class="filter-tab" data-filter="all">All</button>
+              </div>
+              <div class="filter-actions">
+                <div class="date-filter">
+                  <input type="date" value="2023-06-05">
+                </div>
+                <button class="btn primary">
+                  <i class="fas fa-plus"></i> New Appointment
+                </button>
+              </div>
+            </div>
+
+            <div class="appointments-calendar">
+              <div class="calendar-header">
+                <h3>June 2023</h3>
+                <div>
+                  <button class="btn secondary small">
+                    <i class="fas fa-chevron-left"></i>
+                  </button>
+                  <button class="btn secondary small">
+                    <i class="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="calendar-days">
+                <div class="day-names">
+                  <span>Sun</span>
+                  <span>Mon</span>
+                  <span>Tue</span>
+                  <span>Wed</span>
+                  <span>Thu</span>
+                  <span>Fri</span>
+                  <span>Sat</span>
+                </div>
+                <div class="days-grid">
+                  <div class="day other-month">28</div>
+                  <div class="day other-month">29</div>
+                  <div class="day other-month">30</div>
+                  <div class="day other-month">31</div>
+                  <div class="day">1</div>
+                  <div class="day">2</div>
+                  <div class="day">3</div>
+                  <div class="day">4</div>
+                  <div class="day active">5 <span class="appointment-count">8</span></div>
+                  <div class="day">6 <span class="appointment-count">5</span></div>
+                  <div class="day">7 <span class="appointment-count">3</span></div>
+                  <div class="day">8 <span class="appointment-count">4</span></div>
+                  <div class="day">9</div>
+                  <div class="day">10</div>
+                  <div class="day">11</div>
+                  <div class="day">12</div>
+                  <div class="day">13</div>
+                  <div class="day">14</div>
+                  <div class="day">15</div>
+                  <div class="day">16</div>
+                  <div class="day">17</div>
+                  <div class="day">18</div>
+                  <div class="day">19</div>
+                  <div class="day">20</div>
+                  <div class="day">21</div>
+                  <div class="day">22</div>
+                  <div class="day">23</div>
+                  <div class="day">24</div>
+                  <div class="day">25</div>
+                  <div class="day">26</div>
+                  <div class="day">27</div>
+                  <div class="day">28</div>
+                  <div class="day">29</div>
+                  <div class="day">30</div>
+                  <div class="day other-month">1</div>
+                  <div class="day other-month">2</div>
+                  <div class="day other-month">3</div>
+                  <div class="day other-month">4</div>
+                  <div class="day other-month">5</div>
+                  <div class="day other-month">6</div>
+                  <div class="day other-month">7</div>
+                  <div class="day other-month">8</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="daily-schedule">
+              <h3>June 5, 2023</h3>
+              <div class="time-slots">
+                <!-- Will be populated by JavaScript -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages Tab -->
+          <div class="dashboard-tab" id="messages">
+            <h2>Messages</h2>
+
+            <!-- Patient Selection for Messaging -->
+            <div class="patient-selection-panel">
+              <h4>Select a patient to message</h4>
+              <div class="patient-selection">
+                <select id="patient-select">
+                  <option value="">Select a patient</option>
+                  <option value="John Davis">John Davis</option>
+                  <option value="Sarah Johnson">Sarah Johnson</option>
+                  <option value="Robert Chen">Robert Chen</option>
+                  <option value="Emily Wilson">Emily Wilson</option>
+                  <option value="Michael Rodriguez">Michael Rodriguez</option>
+                  <option value="Lisa Kumar">Lisa Kumar</option>
+                  <option value="James Brown">James Brown</option>
+                </select>
+                <div class="communication-buttons">
+                  <button id="start-chat-with-patient" class="btn secondary"><i class="fas fa-comment"></i> Chat</button>
+                  <button id="start-voice-with-patient" class="btn secondary"><i class="fas fa-phone"></i> Voice Call</button>
+                  <button id="start-video-with-patient" class="btn primary"><i class="fas fa-video"></i> Video Call</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="messages-container">
+              <div class="messages-sidebar">
+                <div class="messages-search">
+                  <input type="text" placeholder="Search messages...">
+                  <i class="fas fa-search"></i>
+                </div>
+                <div class="messages-filters">
+                  <button class="filter active" data-filter="all">
+                    All <span class="badge">14</span>
+                  </button>
+                  <button class="filter" data-filter="unread">
+                    Unread <span class="badge">3</span>
+                  </button>
+                  <button class="filter" data-filter="flagged">
+                    Flagged <span class="badge">2</span>
+                  </button>
+                </div>
+                <div class="messages-list">
+                  <div class="message-item unread selected">
+                    <div class="message-avatar">
+                      <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Emily Wilson">
+                    </div>
+                    <div class="message-preview">
+                      <div class="message-header">
+                        <h4>Emily Wilson</h4>
+                        <span class="message-time">11:45 AM</span>
+                      </div>
+                      <p class="message-snippet">Thank you for the prescription, doctor. I wanted to ask about the dosage...</p>
+                    </div>
+                  </div>
+                  <div class="message-item unread">
+                    <div class="message-avatar">
+                      <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="James Brown">
+                    </div>
+                    <div class="message-preview">
+                      <div class="message-header">
+                        <h4>James Brown</h4>
+                        <span class="message-time">10:23 AM</span>
+                      </div>
+                      <p class="message-snippet">I'm experiencing some side effects from the medication you prescribed...</p>
+                    </div>
+                  </div>
+                  <div class="message-item">
+                    <div class="message-avatar">
+                      <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Lisa Kumar">
+                    </div>
+                    <div class="message-preview">
+                      <div class="message-header">
+                        <h4>Lisa Kumar</h4>
+                        <span class="message-time">Yesterday</span>
+                      </div>
+                      <p class="message-snippet">My blood pressure readings for this week as requested...</p>
+                    </div>
+                  </div>
+                  <div class="message-item">
+                    <div class="message-avatar">
+                      <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="John Davis">
+                    </div>
+                    <div class="message-preview">
+                      <div class="message-header">
+                        <h4>John Davis</h4>
+                        <span class="message-time">Yesterday</span>
+                      </div>
+                      <p class="message-snippet">Thanks for keeping track of those readings, John. They're still a bit elevated...</p>
+                    </div>
+                  </div>
+                  <div class="message-item">
+                    <div class="message-avatar">
+                      <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Sarah Johnson">
+                    </div>
+                    <div class="message-preview">
+                      <div class="message-header">
+                        <h4>Sarah Johnson</h4>
+                        <span class="message-time">2 days ago</span>
+                      </div>
+                      <p class="message-snippet">Thank you, doctor. I've booked the appointment for tomorrow at 10:30 AM...</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="message-conversation">
+                <div class="conversation-header">
+                  <div class="patient-info">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Emily Wilson">
+                    <div>
+                      <h3>Emily Wilson</h3>
+                      <p>Last active: 5 min ago</p>
+                    </div>
+                  </div>
+                  <div class="conversation-actions">
+                    <button class="btn icon-only" title="Video Call">
+                      <i class="fas fa-video"></i>
+                    </button>
+                    <button class="btn icon-only" title="Voice Call">
+                      <i class="fas fa-phone"></i>
+                    </button>
+                    <button class="btn icon-only" title="More Options">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="conversation-body">
+                  <div class="conversation-date">Today</div>
+                  <div class="message-bubble received">
+                    <div class="message-text">
+                      Good morning Dr. Smith, I hope you're doing well today.
+                    </div>
+                    <div class="message-time">10:15 AM</div>
+                  </div>
+                  <div class="message-bubble received">
+                    <div class="message-text">
+                      I wanted to thank you for the prescription you sent over yesterday. I was able to get it filled at the pharmacy without any issues.
+                    </div>
+                    <div class="message-time">10:16 AM</div>
+                  </div>
+                  <div class="message-bubble sent">
+                    <div class="message-text">
+                      Good morning Emily. I'm glad to hear that. How are you feeling today?
+                    </div>
+                    <div class="message-time">10:20 AM</div>
+                  </div>
+                  <div class="message-bubble received">
+                    <div class="message-text">
+                      I'm feeling a bit better, thank you. The pain is less intense, but I'm still experiencing some discomfort in the evening.
+                    </div>
+                    <div class="message-time">10:25 AM</div>
+                  </div>
+                  <div class="message-bubble sent">
+                    <div class="message-text">
+                      That's good to hear there's some improvement. The medication may take a few days to reach its full effect. Keep monitoring your symptoms and let me know if there's any significant change.
+                    </div>
+                    <div class="message-time">10:30 AM</div>
+                  </div>
+                  <div class="message-bubble received">
+                    <div class="message-text">
+                      Thank you for the prescription, doctor. I wanted to ask about the dosage - is it normal to take it twice a day? The pharmacist mentioned something about taking it with food, but I wasn't sure if I should take it with breakfast and dinner or at different times.
+                    </div>
+                    <div class="message-time">11:45 AM</div>
+                  </div>
+                </div>
+                <div class="conversation-input">
+                  <i class="fas fa-paperclip"></i>
+                  <textarea placeholder="Type your message..."></textarea>
+                  <button class="send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Patients Tab -->
+          <div class="dashboard-tab" id="patients">
+            <h2>My Patients</h2>
+            <div class="patients-search">
+              <input type="text" placeholder="Search patients...">
+              <button class="btn primary">
+                <i class="fas fa-plus"></i> Add New Patient
+              </button>
+            </div>
+            
+            <div class="patients-list">
+              <!-- Will be populated by JavaScript or placeholder -->
+              <div class="patient-card">
+                <div class="patient-info">
+                  <div class="patient-avatar">
+                    <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="John Davis">
+                  </div>
+                  <div class="patient-details">
+                    <h4>John Davis</h4>
+                    <p>Age: 45 • Male • Hypertension</p>
+                    <p>Last Visit: May 28, 2023</p>
+                  </div>
+                </div>
+                <div class="patient-actions">
+                  <button class="btn secondary small"><i class="fas fa-file-medical"></i> Record</button>
+                  <button class="btn secondary small"><i class="fas fa-comment"></i> Message</button>
+                  <button class="btn primary small"><i class="fas fa-calendar-plus"></i> Schedule</button>
+                </div>
+              </div>
+              
+              <div class="patient-card">
+                <div class="patient-info">
+                  <div class="patient-avatar">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Emily Wilson">
+                  </div>
+                  <div class="patient-details">
+                    <h4>Emily Wilson</h4>
+                    <p>Age: 38 • Female • Lower Back Pain</p>
+                    <p>Last Visit: June 2, 2023</p>
+                  </div>
+                </div>
+                <div class="patient-actions">
+                  <button class="btn secondary small"><i class="fas fa-file-medical"></i> Record</button>
+                  <button class="btn secondary small"><i class="fas fa-comment"></i> Message</button>
+                  <button class="btn primary small"><i class="fas fa-calendar-plus"></i> Schedule</button>
+                </div>
+              </div>
+              
+              <div class="patient-card">
+                <div class="patient-info">
+                  <div class="patient-avatar">
+                    <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Sarah Johnson">
+                  </div>
+                  <div class="patient-details">
+                    <h4>Sarah Johnson</h4>
+                    <p>Age: 52 • Female • Chest Pain</p>
+                    <p>Last Visit: June 3, 2023</p>
+                  </div>
+                </div>
+                <div class="patient-actions">
+                  <button class="btn secondary small"><i class="fas fa-file-medical"></i> Record</button>
+                  <button class="btn secondary small"><i class="fas fa-comment"></i> Message</button>
+                  <button class="btn primary small"><i class="fas fa-calendar-plus"></i> Schedule</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Prescriptions Tab -->
+          <div class="dashboard-tab" id="prescriptions">
+            <h2>Prescriptions</h2>
+            <div class="prescriptions-filter">
+              <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="pending">Pending</button>
+                <button class="filter-tab" data-filter="approved">Approved</button>
+                <button class="filter-tab" data-filter="refills">Refill Requests</button>
+                <button class="filter-tab" data-filter="all">All</button>
+              </div>
+              <div class="filter-actions">
+                <button class="btn primary">
+                  <i class="fas fa-plus"></i> New Prescription
+                </button>
+              </div>
+            </div>
+            
+            <div class="prescriptions-list fullwidth">
+              <div class="prescription-card">
+                <div class="prescription-patient-info">
+                  <div class="patient-avatar">
+                    <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="James Brown">
+                  </div>
+                  <div>
+                    <h4>James Brown</h4>
+                    <p>Requested: Jun 4, 2023</p>
+                  </div>
+                </div>
+                <div class="prescription-details">
+                  <p>Medication: Lisinopril 10mg</p>
+                  <p>Instructions: Take one tablet daily</p>
+                  <p>Refill Request</p>
+                </div>
+                <div class="prescription-actions">
+                  <button class="btn primary small">Approve</button>
+                  <button class="btn secondary small">Review</button>
+                  <button class="btn secondary small">Contact Patient</button>
+                </div>
+              </div>
+              
+              <div class="prescription-card">
+                <div class="prescription-patient-info">
+                  <div class="patient-avatar">
+                    <img src="https://randomuser.me/api/portraits/women/67.jpg" alt="Emily Wilson">
+                  </div>
+                  <div>
+                    <h4>Emily Wilson</h4>
+                    <p>Requested: Jun 5, 2023</p>
+                  </div>
+                </div>
+                <div class="prescription-details">
+                  <p>Medication: Metformin 500mg</p>
+                  <p>Instructions: Take one tablet twice daily with meals</p>
+                  <p>New Prescription</p>
+                </div>
+                <div class="prescription-actions">
+                  <button class="btn primary small">Approve</button>
+                  <button class="btn secondary small">Review</button>
+                  <button class="btn secondary small">Contact Patient</button>
+                </div>
+              </div>
+              
+              <div class="prescription-card">
+                <div class="prescription-patient-info">
+                  <div class="patient-avatar">
+                    <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="John Davis">
+                  </div>
+                  <div>
+                    <h4>John Davis</h4>
+                    <p>Requested: Jun 3, 2023</p>
+                  </div>
+                </div>
+                <div class="prescription-details">
+                  <p>Medication: Amlodipine 5mg</p>
+                  <p>Instructions: Take one tablet daily in the evening</p>
+                  <p>Refill Request</p>
+                </div>
+                <div class="prescription-status approved">
+                  <span><i class="fas fa-check-circle"></i> Approved</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Schedule Tab -->
+          <div class="dashboard-tab" id="schedule">
+            <h2>Schedule</h2>
+            <div class="schedule-controls">
+              <div class="schedule-navigation">
+                <button class="btn secondary small">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <h3>June 5 - 11, 2023</h3>
+                <button class="btn secondary small">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+              <div class="schedule-actions">
+                <button class="btn secondary">
+                  <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+                <button class="btn primary">
+                  <i class="fas fa-plus"></i> Add Event
+                </button>
+              </div>
+            </div>
+            
+            <div class="weekly-schedule">
+              <div class="schedule-header">
+                <div class="time-column"></div>
+                <div class="day-column weekend">Sun, 4</div>
+                <div class="day-column">Mon, 5</div>
+                <div class="day-column">Tue, 6</div>
+                <div class="day-column">Wed, 7</div>
+                <div class="day-column">Thu, 8</div>
+                <div class="day-column">Fri, 9</div>
+                <div class="day-column weekend">Sat, 10</div>
+              </div>
+              <div class="schedule-body">
+                <div class="schedule-row">
+                  <div class="time-column">8:00 AM</div>
+                  <div class="day-column weekend"></div>
+                  <div class="day-column">
+                    <div class="schedule-event completed">
+                      <div class="event-time">8:00 - 8:30</div>
+                      <div class="event-title">Robert Chen</div>
+                      <div class="event-type">Follow-up</div>
+                    </div>
+                  </div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">8:00 - 8:30</div>
+                      <div class="event-title">Maria Garcia</div>
+                      <div class="event-type">New Patient</div>
+                    </div>
+                  </div>
+                  <div class="day-column"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">8:00 - 8:30</div>
+                      <div class="event-title">David Kim</div>
+                      <div class="event-type">Follow-up</div>
+                    </div>
+                  </div>
+                  <div class="day-column"></div>
+                  <div class="day-column weekend"></div>
+                </div>
+                <div class="schedule-row">
+                  <div class="time-column">9:00 AM</div>
+                  <div class="day-column weekend"></div>
+                  <div class="day-column">
+                    <div class="schedule-event active">
+                      <div class="event-time">9:00 - 9:30</div>
+                      <div class="event-title">John Davis</div>
+                      <div class="event-type">Follow-up</div>
+                    </div>
+                  </div>
+                  <div class="day-column"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">9:00 - 9:30</div>
+                      <div class="event-title">Patricia Lee</div>
+                      <div class="event-type">New Patient</div>
+                    </div>
+                  </div>
+                  <div class="day-column"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">9:00 - 9:30</div>
+                      <div class="event-title">William Chen</div>
+                      <div class="event-type">Follow-up</div>
+                    </div>
+                  </div>
+                  <div class="day-column weekend"></div>
+                </div>
+                <div class="schedule-row">
+                  <div class="time-column">10:00 AM</div>
+                  <div class="day-column weekend"></div>
+                  <div class="day-column"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">10:00 - 10:30</div>
+                      <div class="event-title">Michael Rodriguez</div>
+                      <div class="event-type">Follow-up</div>
+                    </div>
+                  </div>
+                  <div class="day-column"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">10:00 - 10:30</div>
+                      <div class="event-title">Emma Thompson</div>
+                      <div class="event-type">Follow-up</div>
+                    </div>
+                  </div>
+                  <div class="day-column"></div>
+                  <div class="day-column weekend"></div>
+                </div>
+                <div class="schedule-row">
+                  <div class="time-column">11:00 AM</div>
+                  <div class="day-column weekend"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">11:00 - 11:30</div>
+                      <div class="event-title">Lisa Kumar</div>
+                      <div class="event-type">New Patient</div>
+                    </div>
+                  </div>
+                  <div class="day-column"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">11:00 - 11:30</div>
+                      <div class="event-title">James Brown</div>
+                      <div class="event-type">Follow-up</div>
+                    </div>
+                  </div>
+                  <div class="day-column"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">11:00 - 11:30</div>
+                      <div class="event-title">Sarah Johnson</div>
+                      <div class="event-type">Follow-up</div>
+                    </div>
+                  </div>
+                  <div class="day-column weekend"></div>
+                </div>
+                <div class="schedule-row lunch">
+                  <div class="time-column">12:00 PM</div>
+                  <div class="day-column weekend"></div>
+                  <div class="day-column">
+                    <div class="schedule-event break">Lunch Break</div>
+                  </div>
+                  <div class="day-column">
+                    <div class="schedule-event break">Lunch Break</div>
+                  </div>
+                  <div class="day-column">
+                    <div class="schedule-event break">Lunch Break</div>
+                  </div>
+                  <div class="day-column">
+                    <div class="schedule-event break">Lunch Break</div>
+                  </div>
+                  <div class="day-column">
+                    <div class="schedule-event break">Lunch Break</div>
+                  </div>
+                  <div class="day-column weekend"></div>
+                </div>
+                <div class="schedule-row">
+                  <div class="time-column">1:00 PM</div>
+                  <div class="day-column weekend"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">1:00 - 1:30</div>
+                      <div class="event-title">Emily Wilson</div>
+                      <div class="event-type meeting">Medication Review</div>
+                    </div>
+                  </div>
+                  <div class="day-column"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">1:00 - 1:30</div>
+                      <div class="event-title">Alex Patel</div>
+                      <div class="event-type">New Patient</div>
+                    </div>
+                  </div>
+                  <div class="day-column"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">1:00 - 1:30</div>
+                      <div class="event-title">Lucas Wong</div>
+                      <div class="event-type">Follow-up</div>
+                    </div>
+                  </div>
+                  <div class="day-column weekend"></div>
+                </div>
+                <div class="schedule-row">
+                  <div class="time-column">2:00 PM</div>
+                  <div class="day-column weekend"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">2:00 - 2:30</div>
+                      <div class="event-title">Michael Rodriguez</div>
+                      <div class="event-type">Follow-up</div>
+                    </div>
+                  </div>
+                  <div class="day-column"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">2:00 - 2:30</div>
+                      <div class="event-title">Team Meeting</div>
+                      <div class="event-type meeting">Meeting</div>
+                    </div>
+                  </div>
+                  <div class="day-column"></div>
+                  <div class="day-column">
+                    <div class="schedule-event">
+                      <div class="event-time">2:00 - 2:30</div>
+                      <div class="event-title">Olivia Martinez</div>
+                      <div class="event-type">New Patient</div>
+                    </div>
+                  </div>
+                  <div class="day-column weekend"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Reports Tab -->
+          <div class="dashboard-tab" id="reports">
+            <h2>Reports</h2>
+            <div class="reports-summary">
+              <p>View and generate reports for your practice.</p>
+            </div>
+            <!-- Reports content here -->
+          </div>
+          
+          <!-- Settings Tab -->
+          <div class="dashboard-tab" id="settings">
+            <h2>Settings</h2>
+            <div class="settings-summary">
+              <p>Manage your account and application settings.</p>
+            </div>
+            <!-- Settings content here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>MediConnect</h3>
+          <p>Connecting healthcare professionals, students, and patients for better health outcomes.</p>
+        </div>
+        <div class="footer-column">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="consultation.html">Find Doctor</a></li>
+            <li><a href="learning.html">Learning Resources</a></li>
+            <li><a href="community.html">Community</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Connect</h4>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2023 MediConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Video Call Modal -->
+  <div class="video-call-modal" id="video-call-modal" style="display: none;">
+    <!-- Video call content will be generated by JavaScript -->
+  </div>
+
+  <!-- Voice Call Modal -->
+  <div class="voice-call-modal" id="voice-call-modal" style="display: none;">
+    <!-- Voice call content will be generated by JavaScript -->
+  </div>
+
+  <!-- Reschedule Modal -->
+  <div class="reschedule-modal" id="reschedule-modal" style="display: none;">
+    <!-- Reschedule content will be generated by JavaScript -->
+  </div>
+
+  <script src="doctor-dashboard.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

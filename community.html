@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  // Apply role to body for CSS targeting
+  document.addEventListener('DOMContentLoaded', function() {
+    const userJson = localStorage.getItem('user');
+    if (userJson) {
+      try {
+        const user = JSON.parse(userJson);
+        document.body.setAttribute('data-role', user.role);
+        
+        // Configure community features based on role
+        if (user.role === 'doctor') {
+          // Doctors see professional forums
+          document.querySelectorAll('.doctor-forum').forEach(el => el.style.display = '');
+        } else if (user.role === 'patient') {
+          // Patients see support groups
+          document.querySelectorAll('.patient-forum').forEach(el => el.style.display = '');
+        } else if (user.role === 'student') {
+          // Students see study groups
+          document.querySelectorAll('.student-forum').forEach(el => el.style.display = '');
+        }
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+      }
+    }
+  });
+</script>
+
+  <title>MediConnect - Community</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .community-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      display: grid;
+      grid-template-columns: 3fr 1fr;
+      gap: 30px;
+    }
+
+    .community-main {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .community-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .post-creation {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .post-creation h3 {
+      margin-bottom: 15px;
+    }
+
+    .post-creation textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+      resize: vertical;
+    }
+
+    .post-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .post-options {
+      display: flex;
+      gap: 15px;
+    }
+
+    .post-options button {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .post-filters {
+      display: flex;
+      margin-bottom: 20px;
+      background-color: white;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: var(--shadow);
+    }
+
+    .filter-tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-bottom: 3px solid transparent;
+    }
+
+    .filter-tab:hover {
+      color: var(--primary-color);
+    }
+
+    .filter-tab.active {
+      color: var(--primary-color);
+      border-bottom-color: var(--primary-color);
+    }
+
+    .posts-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .post-card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .post-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .author-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .author-info h4 {
+      margin-bottom: 3px;
+    }
+
+    .post-time {
+      color: #777;
+      font-size: 14px;
+    }
+
+    .post-content {
+      margin-bottom: 20px;
+    }
+
+    .post-content h3 {
+      margin-bottom: 10px;
+    }
+
+    .post-content p {
+      margin-bottom: 15px;
+    }
+
+    .post-tags {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background-color: #f1f1f1;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    .post-actions {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #777;
+      transition: color 0.2s ease;
+    }
+
+    .action-btn:hover {
+      color: var(--primary-color);
+    }
+
+    .action-btn.liked {
+      color: var(--primary-color);
+    }
+
+    .comment-section {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .comment-input {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .comment-input input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .comment {
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .comment-author {
+      font-weight: bold;
+    }
+
+    .comment-time {
+      font-size: 12px;
+      color: #777;
+    }
+
+    .sidebar-box {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar-box h3 {
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .trending-topics {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .trending-topic {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .trending-topic .number {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .trending-topic .title {
+      font-weight: bold;
+    }
+
+    .trending-topic .details {
+      font-size: 12px;
+      color: #777;
+    }
+
+    .active-users {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      position: relative;
+    }
+
+    .user-avatar.online:after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #2ecc71;
+      border: 2px solid white;
+    }
+
+    .upcoming-events .event {
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .upcoming-events .event:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .event-date {
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+
+    .event-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .doctor-messaging {
+      margin-top: 20px;
+    }
+    .message-input-area {
+      margin-top: 20px;
+    }
+    .doctors-list {
+      margin-bottom: 20px;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>MediConnect</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="consultation.html">Consultation</a></li>
+          <li><a href="learning.html">Learning</a></li>
+          <li><a href="community.html" class="active">Community</a></li>
+          <li><a href="ai-chat.html">AI Assistant</a></li>
+          <li><a href="#" class="login-btn">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h2 class="section-title">Community Forum</h2>
+
+      <div class="community-container">
+        <div class="community-main">
+          <div class="post-creation">
+            <h3>Start a Discussion</h3>
+            <textarea placeholder="What's on your mind? Share your thoughts, questions, or experiences..."></textarea>
+            <div class="post-controls">
+              <div class="post-options">
+                <button><i class="fas fa-image"></i> Photo</button>
+                <button><i class="fas fa-video"></i> Video</button>
+                <button><i class="fas fa-paperclip"></i> Attachment</button>
+                <button><i class="fas fa-tags"></i> Tags</button>
+              </div>
+              <button class="btn primary">Post</button>
+            </div>
+          </div>
+
+          <div class="post-filters">
+            <div class="filter-tab active" data-filter="latest">Latest</div>
+            <div class="filter-tab" data-filter="popular">Popular</div>
+            <div class="filter-tab" data-filter="unanswered">Unanswered</div>
+            <div class="filter-tab" data-filter="following">Following</div>
+          </div>
+
+          <div class="posts-container" id="posts-container">
+            <!-- Posts will be loaded dynamically -->
+          </div>
+        </div>
+
+        <div class="community-sidebar">
+          <div class="sidebar-box">
+            <h3>Trending Topics</h3>
+            <div class="trending-topics">
+              <div class="trending-topic">
+                <div class="number">1</div>
+                <div>
+                  <div class="title">Long COVID Recovery</div>
+                  <div class="details">128 posts • Updated 2h ago</div>
+                </div>
+              </div>
+              <div class="trending-topic">
+                <div class="number">2</div>
+                <div>
+                  <div class="title">Medical School Applications</div>
+                  <div class="details">95 posts • Updated 5h ago</div>
+                </div>
+              </div>
+              <div class="trending-topic">
+                <div class="number">3</div>
+                <div>
+                  <div class="title">New Cancer Treatment</div>
+                  <div class="details">87 posts • Updated 1d ago</div>
+                </div>
+              </div>
+              <div class="trending-topic">
+                <div class="number">4</div>
+                <div>
+                  <div class="title">Mental Health Awareness</div>
+                  <div class="details">74 posts • Updated 2d ago</div>
+                </div>
+              </div>
+              <div class="trending-topic">
+                <div class="number">5</div>
+                <div>
+                  <div class="title">Vaccine Developments</div>
+                  <div class="details">62 posts • Updated 3d ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-box">
+            <h3>Active Users</h3>
+            <div class="active-users">
+              <div class="user-avatar online" title="Dr. Johnson">DJ</div>
+              <div class="user-avatar online" title="Sarah Parker">SP</div>
+              <div class="user-avatar" title="Mike Chen">MC</div>
+              <div class="user-avatar online" title="Emily Wilson">EW</div>
+              <div class="user-avatar" title="Robert Davis">RD</div>
+              <div class="user-avatar online" title="Lisa Kumar">LK</div>
+              <div class="user-avatar" title="David Smith">DS</div>
+              <div class="user-avatar online" title="Maria Rodriguez">MR</div>
+              <div class="user-avatar" title="John Brown">JB</div>
+              <div class="user-avatar online" title="Amy Zhang">AZ</div>
+            </div>
+          </div>
+
+          <div class="sidebar-box">
+            <h3>Upcoming Events</h3>
+            <div class="upcoming-events">
+              <div class="event">
+                <div class="event-date">June 15, 2023</div>
+                <div class="event-title">Medical Career Fair</div>
+                <div class="event-details">Virtual • 10:00 AM - 4:00 PM</div>
+              </div>
+              <div class="event">
+                <div class="event-date">June 22, 2023</div>
+                <div class="event-title">Mental Health Webinar</div>
+                <div class="event-details">Live Stream • 2:00 PM - 3:30 PM</div>
+              </div>
+              <div class="event">
+                <div class="event-date">July 5, 2023</div>
+                <div class="event-title">First Aid Certification</div>
+                <div class="event-details">Multiple Locations • 9:00 AM - 5:00 PM</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-box">
+            <h3>Popular Groups</h3>
+            <div class="popular-groups">
+              <div class="group">
+                <div class="group-name">Medical Students Network</div>
+                <div class="group-members">1,245 members</div>
+              </div>
+              <div class="group">
+                <div class="group-name">Healthcare Professionals</div>
+                <div class="group-members">3,782 members</div>
+              </div>
+              <div class="group">
+                <div class="group-name">Chronic Illness Support</div>
+                <div class="group-members">942 members</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-box">
+            <h3>Message a Doctor</h3>
+            <div class="doctor-messaging">
+              <form id="doctor-message-form">
+                <div class="doctors-list" id="doctors-list">
+                  <!-- Doctors will be loaded dynamically -->
+                  <p>Loading doctors...</p>
+                </div>
+
+                <div class="message-input-area">
+                  <label for="doctor-message">Your message:</label>
+                  <textarea id="doctor-message" placeholder="Type your medical question here..." required></textarea>
+                  <p class="message-hint">Doctors usually respond within 24 hours.</p>
+                  <div id="message-status" style="display: none; margin: 10px 0;"></div>
+                  <button type="submit" class="btn primary">Send Message</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          
+          <script>
+            // Ensure doctor messaging form works
+            document.addEventListener('DOMContentLoaded', function() {
+              const doctorMessageForm = document.getElementById('doctor-message-form');
+              if (doctorMessageForm) {
+                doctorMessageForm.addEventListener('submit', function(e) {
+                  e.preventDefault();
+                  
+                  const messageInput = document.getElementById('doctor-message');
+                  const message = messageInput.value.trim();
+                  const statusDiv = document.getElementById('message-status');
+                  
+                  if (message === '') {
+                    alert('Please enter a message');
+                    return;
+                  }
+                  
+                  // Show loading status
+                  statusDiv.style.display = 'block';
+                  statusDiv.textContent = 'Sending message...';
+                  statusDiv.style.color = '#3498db';
+                  
+                  // Simulate sending message
+                  setTimeout(function() {
+                    statusDiv.textContent = 'Message sent successfully! The doctor will respond within 24 hours.';
+                    statusDiv.style.color = '#2ecc71';
+                    messageInput.value = '';
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(function() {
+                      statusDiv.style.display = 'none';
+                    }, 5000);
+                  }, 1500);
+                });
+              }
+            });
+          </script>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>MediConnect</h3>
+          <p>Bridging the gap between healthcare professionals, students, and patients.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="consultation.html">Consultation</a></li>
+            <li><a href="learning.html">Learning</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="ai-chat.html">AI Assistant</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p>Email: info@mediconnect.com</p>
+          <p>Phone: +1 (555) 123-4567</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 MediConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Login</h2>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="patient">Patient</button>
+        <button class="tab-btn" data-tab="doctor">Doctor</button>
+        <button class="tab-btn" data-tab="student">Student</button>
+      </div>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required>
+        </div>
+        <button type="submit" class="btn primary">Login</button>
+        <p class="form-footer">Don't have an account? <a href="#">Sign Up</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="community.js"></script>
+</body>
+</html>

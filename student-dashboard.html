@@ -1,0 +1,729 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediConnect - Student Dashboard</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    // Check if user is logged in and has the correct role
+    document.addEventListener('DOMContentLoaded', function() {
+      const userJson = localStorage.getItem('user');
+      if (!userJson) {
+        window.location.href = 'index.html';
+        alert('Please log in to access the student dashboard.');
+        return;
+      }
+      
+      try {
+        const user = JSON.parse(userJson);
+        document.body.setAttribute('data-role', user.role);
+        
+        // Redirect if wrong role
+        if (user.role !== 'student') {
+          alert('This page is for students only. Redirecting to home page.');
+          window.location.href = 'index.html';
+        }
+        
+        // Update user info in the dashboard
+        const userName = document.getElementById('student-name');
+        const userAvatar = document.getElementById('student-avatar');
+        if (userName && user.name) {
+          userName.textContent = user.name;
+        }
+        if (userAvatar && user.name) {
+          userAvatar.textContent = user.name.charAt(0).toUpperCase();
+        }
+        
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+      }
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>MediConnect</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="consultation.html">Consultation</a></li>
+          <li><a href="learning.html">Learning</a></li>
+          <li><a href="community.html">Community</a></li>
+          <li><a href="ai-chat.html">AI Assistant</a></li>
+          <li><a href="about.html">About Us</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <div class="container">
+          <div class="user-welcome" id="user-welcome">
+            <h3>Welcome, Student!</h3>
+            <p>Continue your medical learning journey</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="dashboard-wrapper">
+          <div class="dashboard-sidebar">
+            <div class="user-card">
+              <div class="user-avatar" id="student-avatar">S</div>
+              <h4 id="student-name">Student</h4>
+              <p id="student-email">student@example.com</p>
+              <button class="btn secondary" onclick="editProfile()">Edit Profile</button>
+            </div>
+
+            <ul class="dashboard-nav">
+              <li class="active" data-tab="overview">
+                <i class="fas fa-home"></i> Overview
+              </li>
+              <li data-tab="courses">
+                <i class="fas fa-book-medical"></i> My Courses
+              </li>
+              <li data-tab="quizzes">
+                <i class="fas fa-question-circle"></i> Quizzes
+              </li>
+              <li data-tab="symptom-checker">
+                <i class="fas fa-stethoscope"></i> Symptom Checker
+              </li>
+              <li data-tab="simulations">
+                <i class="fas fa-vial"></i> Simulations
+              </li>
+              <li data-tab="settings">
+                <i class="fas fa-cog"></i> Settings
+              </li>
+            </ul>
+          </div>
+
+          <div class="dashboard-content">
+            <!-- Overview Tab -->
+            <div id="overview" class="dashboard-tab active">
+              <div class="dashboard-stats">
+                <div class="stat-card">
+                  <div class="stat-icon">
+                    <i class="fas fa-book-open"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3>5</h3>
+                    <p>Courses in Progress</p>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3>12</h3>
+                    <p>Quizzes Completed</p>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon">
+                    <i class="fas fa-award"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3>3</h3>
+                    <p>Certifications</p>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3>24</h3>
+                    <p>Hours of Study</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dashboard-sections">
+                <div class="section-card">
+                  <h4>Continue Learning</h4>
+                  <div class="course-cards">
+                    <div class="course-card">
+                      <div class="course-progress">
+                        <div class="circular-progress" data-progress="65">
+                          <div class="progress-text">65%</div>
+                        </div>
+                      </div>
+                      <h4>Anatomy 101</h4>
+                      <p>Human Body Systems</p>
+                      <button class="btn primary">Continue</button>
+                    </div>
+                    <div class="course-card">
+                      <div class="course-progress">
+                        <div class="circular-progress" data-progress="30">
+                          <div class="progress-text">30%</div>
+                        </div>
+                      </div>
+                      <h4>Medical Terminology</h4>
+                      <p>Understanding Latin & Greek roots</p>
+                      <button class="btn primary">Continue</button>
+                    </div>
+                    <div class="course-card">
+                      <div class="course-progress">
+                        <div class="circular-progress" data-progress="85">
+                          <div class="progress-text">85%</div>
+                        </div>
+                      </div>
+                      <h4>Pathophysiology</h4>
+                      <p>Disease mechanisms</p>
+                      <button class="btn primary">Continue</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="section-card">
+                  <h4>Recent Activity</h4>
+                  <ul class="activity-list" id="activity-list">
+                    <li class="activity-item">
+                      <div class="activity-icon"><i class="fas fa-check-circle"></i></div>
+                      <div class="activity-details">
+                        <p class="activity-title">Completed Quiz: Cardiovascular System</p>
+                        <p class="activity-time">Today at 2:30 PM</p>
+                      </div>
+                    </li>
+                    <li class="activity-item">
+                      <div class="activity-icon"><i class="fas fa-book"></i></div>
+                      <div class="activity-details">
+                        <p class="activity-title">Started new lesson: Respiratory Diseases</p>
+                        <p class="activity-time">Today at 11:15 AM</p>
+                      </div>
+                    </li>
+                    <li class="activity-item">
+                      <div class="activity-icon"><i class="fas fa-award"></i></div>
+                      <div class="activity-details">
+                        <p class="activity-title">Earned certificate: Basic Life Support</p>
+                        <p class="activity-time">Yesterday at 5:45 PM</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Courses Tab -->
+            <div id="courses" class="dashboard-tab">
+              <h3>My Courses</h3>
+              <div class="filter-bar">
+                <div class="search-bar">
+                  <input type="text" placeholder="Search courses...">
+                  <i class="fas fa-search"></i>
+                </div>
+                <div class="filter-dropdown">
+                  <select>
+                    <option value="all">All Courses</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="not-started">Not Started</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="courses-grid">
+                <div class="course-card large">
+                  <div class="course-thumbnail" style="background-color: #3498db;">
+                    <i class="fas fa-heart"></i>
+                  </div>
+                  <div class="course-details">
+                    <h4>Cardiovascular System</h4>
+                    <p>Learn about the heart, blood vessels, and circulation</p>
+                    <div class="course-meta">
+                      <span><i class="fas fa-clock"></i> 8 hours</span>
+                      <span><i class="fas fa-book-open"></i> 12 lessons</span>
+                    </div>
+                    <div class="progress-bar">
+                      <div class="progress" style="width: 75%;"></div>
+                    </div>
+                    <p class="progress-text">75% Complete</p>
+                    <button class="btn primary">Continue Course</button>
+                  </div>
+                </div>
+
+                <div class="course-card large">
+                  <div class="course-thumbnail" style="background-color: #e74c3c;">
+                    <i class="fas fa-lungs"></i>
+                  </div>
+                  <div class="course-details">
+                    <h4>Respiratory System</h4>
+                    <p>Study the lungs and breathing mechanics</p>
+                    <div class="course-meta">
+                      <span><i class="fas fa-clock"></i> 6 hours</span>
+                      <span><i class="fas fa-book-open"></i> 9 lessons</span>
+                    </div>
+                    <div class="progress-bar">
+                      <div class="progress" style="width: 30%;"></div>
+                    </div>
+                    <p class="progress-text">30% Complete</p>
+                    <button class="btn primary">Continue Course</button>
+                  </div>
+                </div>
+
+                <div class="course-card large">
+                  <div class="course-thumbnail" style="background-color: #2ecc71;">
+                    <i class="fas fa-brain"></i>
+                  </div>
+                  <div class="course-details">
+                    <h4>Nervous System</h4>
+                    <p>Explore the brain, spinal cord, and neural networks</p>
+                    <div class="course-meta">
+                      <span><i class="fas fa-clock"></i> 10 hours</span>
+                      <span><i class="fas fa-book-open"></i> 14 lessons</span>
+                    </div>
+                    <div class="progress-bar">
+                      <div class="progress" style="width: 15%;"></div>
+                    </div>
+                    <p class="progress-text">15% Complete</p>
+                    <button class="btn primary">Continue Course</button>
+                  </div>
+                </div>
+
+                <div class="course-card large">
+                  <div class="course-thumbnail" style="background-color: #9b59b6;">
+                    <i class="fas fa-stethoscope"></i>
+                  </div>
+                  <div class="course-details">
+                    <h4>Clinical Skills</h4>
+                    <p>Learn essential skills for patient assessment</p>
+                    <div class="course-meta">
+                      <span><i class="fas fa-clock"></i> 12 hours</span>
+                      <span><i class="fas fa-book-open"></i> 15 lessons</span>
+                    </div>
+                    <div class="progress-bar">
+                      <div class="progress" style="width: 0%;"></div>
+                    </div>
+                    <p class="progress-text">Not Started</p>
+                    <button class="btn primary">Start Course</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quizzes Tab -->
+            <div id="quizzes" class="dashboard-tab">
+              <h3>Medical Quizzes</h3>
+              <div class="quizzes-container">
+                <div class="quiz-category">
+                  <h4>Available Quizzes</h4>
+                  <div class="quiz-cards">
+                    <div class="quiz-card">
+                      <div class="quiz-icon"><i class="fas fa-heartbeat"></i></div>
+                      <h5>Cardiovascular System Quiz</h5>
+                      <p>Test your knowledge of heart anatomy and physiology</p>
+                      <div class="quiz-meta">
+                        <span><i class="fas fa-question-circle"></i> 20 Questions</span>
+                        <span><i class="fas fa-clock"></i> 15 Minutes</span>
+                      </div>
+                      <button class="btn primary">Take Quiz</button>
+                    </div>
+                    <div class="quiz-card">
+                      <div class="quiz-icon"><i class="fas fa-lungs"></i></div>
+                      <h5>Respiratory Pathology Quiz</h5>
+                      <p>Test your knowledge of common respiratory diseases</p>
+                      <div class="quiz-meta">
+                        <span><i class="fas fa-question-circle"></i> 15 Questions</span>
+                        <span><i class="fas fa-clock"></i> 12 Minutes</span>
+                      </div>
+                      <button class="btn primary">Take Quiz</button>
+                    </div>
+                    <div class="quiz-card">
+                      <div class="quiz-icon"><i class="fas fa-brain"></i></div>
+                      <h5>Neuroanatomy Quiz</h5>
+                      <p>Test your knowledge of brain structures and functions</p>
+                      <div class="quiz-meta">
+                        <span><i class="fas fa-question-circle"></i> 25 Questions</span>
+                        <span><i class="fas fa-clock"></i> 20 Minutes</span>
+                      </div>
+                      <button class="btn primary">Take Quiz</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="quiz-category">
+                  <h4>Completed Quizzes</h4>
+                  <div class="quiz-cards">
+                    <div class="quiz-card completed">
+                      <div class="quiz-icon"><i class="fas fa-prescription-bottle-alt"></i></div>
+                      <h5>Pharmacology Basics Quiz</h5>
+                      <div class="quiz-score">
+                        <div class="score-circle">85%</div>
+                        <p>Your Score</p>
+                      </div>
+                      <div class="quiz-meta">
+                        <span><i class="fas fa-calendar-alt"></i> Completed on May 15, 2023</span>
+                      </div>
+                      <button class="btn secondary">Review Answers</button>
+                    </div>
+                    <div class="quiz-card completed">
+                      <div class="quiz-icon"><i class="fas fa-microscope"></i></div>
+                      <h5>Microbiology Quiz</h5>
+                      <div class="quiz-score">
+                        <div class="score-circle">92%</div>
+                        <p>Your Score</p>
+                      </div>
+                      <div class="quiz-meta">
+                        <span><i class="fas fa-calendar-alt"></i> Completed on May 10, 2023</span>
+                      </div>
+                      <button class="btn secondary">Review Answers</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Symptom Checker Tab -->
+            <div id="symptom-checker" class="dashboard-tab">
+              <h3>Medical Symptom Checker</h3>
+              <p>This tool is for educational purposes only. It helps medical students practice symptom analysis and differential diagnosis. This is not a substitute for professional medical advice.</p>
+
+              <div class="symptom-checker">
+                <div class="symptom-checker-tabs">
+                  <button class="tab-btn active" data-tab="text-input">Text Description</button>
+                  <button class="tab-btn" data-tab="body-map">Body Map</button>
+                  <button class="tab-btn" data-tab="common-symptoms">Common Symptoms</button>
+                </div>
+
+                <div class="symptom-input-container">
+                  <!-- Text Input Tab -->
+                  <div class="tab-content active" id="text-input">
+                    <form id="symptom-form">
+                      <textarea id="symptoms-textarea" placeholder="Describe the symptoms for analysis... e.g., 'Patient presents with fever, headache, and sore throat for the past 3 days'" required></textarea>
+                      <div class="symptom-details">
+                        <div class="form-group">
+                          <label for="symptom-duration">Duration:</label>
+                          <select id="symptom-duration">
+                            <option value="">Select duration</option>
+                            <option value="hours">Hours</option>
+                            <option value="days">Days</option>
+                            <option value="weeks">Weeks</option>
+                            <option value="months">Months</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="symptom-severity">Severity:</label>
+                          <div class="severity-slider">
+                            <span>Mild</span>
+                            <input type="range" id="symptom-severity" min="1" max="10" value="5">
+                            <span>Severe</span>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="submit" class="btn primary"><i class="fas fa-search"></i> Analyze Symptoms</button>
+                    </form>
+                  </div>
+
+                  <!-- Body Map Tab -->
+                  <div class="tab-content" id="body-map">
+                    <p>Click on the body areas where symptoms are reported:</p>
+                    <div class="body-map-container">
+                      <div class="body-map">
+                        <img src="https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584_1280.png" alt="Human body outline">
+                        <div class="body-part" data-part="head" style="top: 5%; left: 50%; width: 15%; height: 15%;"></div>
+                        <div class="body-part" data-part="chest" style="top: 25%; left: 50%; width: 20%; height: 15%;"></div>
+                        <div class="body-part" data-part="abdomen" style="top: 40%; left: 50%; width: 20%; height: 15%;"></div>
+                        <div class="body-part" data-part="left-arm" style="top: 30%; left: 30%; width: 10%; height: 25%;"></div>
+                        <div class="body-part" data-part="right-arm" style="top: 30%; left: 70%; width: 10%; height: 25%;"></div>
+                        <div class="body-part" data-part="left-leg" style="top: 65%; left: 45%; width: 10%; height: 30%;"></div>
+                        <div class="body-part" data-part="right-leg" style="top: 65%; left: 55%; width: 10%; height: 30%;"></div>
+                      </div>
+                      <div class="selected-body-parts">
+                        <h4>Selected areas:</h4>
+                        <ul id="selected-parts-list">
+                          <li>No areas selected</li>
+                        </ul>
+                        <button id="analyze-body-parts" class="btn primary" disabled><i class="fas fa-search"></i> Analyze Selected Areas</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Common Symptoms Tab -->
+                  <div class="tab-content" id="common-symptoms">
+                    <p>Select the symptoms for analysis:</p>
+                    <div class="common-symptoms-list">
+                      <div class="symptom-category">
+                        <h4>General</h4>
+                        <div class="symptom-checkboxes">
+                          <label><input type="checkbox" value="fever"> Fever</label>
+                          <label><input type="checkbox" value="fatigue"> Fatigue</label>
+                          <label><input type="checkbox" value="chills"> Chills</label>
+                          <label><input type="checkbox" value="weakness"> Weakness</label>
+                        </div>
+                      </div>
+                      <div class="symptom-category">
+                        <h4>Head</h4>
+                        <div class="symptom-checkboxes">
+                          <label><input type="checkbox" value="headache"> Headache</label>
+                          <label><input type="checkbox" value="dizziness"> Dizziness</label>
+                          <label><input type="checkbox" value="lightheadedness"> Lightheadedness</label>
+                        </div>
+                      </div>
+                      <div class="symptom-category">
+                        <h4>Respiratory</h4>
+                        <div class="symptom-checkboxes">
+                          <label><input type="checkbox" value="cough"> Cough</label>
+                          <label><input type="checkbox" value="shortness of breath"> Shortness of breath</label>
+                          <label><input type="checkbox" value="sore throat"> Sore throat</label>
+                          <label><input type="checkbox" value="runny nose"> Runny nose</label>
+                        </div>
+                      </div>
+                      <div class="symptom-category">
+                        <h4>Digestive</h4>
+                        <div class="symptom-checkboxes">
+                          <label><input type="checkbox" value="nausea"> Nausea</label>
+                          <label><input type="checkbox" value="vomiting"> Vomiting</label>
+                          <label><input type="checkbox" value="diarrhea"> Diarrhea</label>
+                          <label><input type="checkbox" value="stomach pain"> Stomach pain</label>
+                        </div>
+                      </div>
+                      <button id="analyze-common-symptoms" class="btn primary"><i class="fas fa-search"></i> Analyze Selected Symptoms</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="results" style="display: none;">
+                  <div class="results-header">
+                    <h4>Analysis Results</h4>
+                    <span class="disclaimer-label">For educational purposes only</span>
+                  </div>
+                  <div class="conditions-section">
+                    <h5>Possible Conditions:</h5>
+                    <ul id="conditions-list"></ul>
+                  </div>
+                  <div class="recommendations-section">
+                    <h5>Recommendations:</h5>
+                    <ul id="recommendations-list"></ul>
+                  </div>
+                  <div class="emergency-warning" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>WARNING:</strong> These symptoms may indicate a serious condition that requires immediate medical attention.
+                  </div>
+                  <div class="next-steps">
+                    <h5>Next Steps:</h5>
+                    <div class="next-steps-buttons">
+                      <button id="find-doctor-btn" class="btn secondary"><i class="fas fa-user-md"></i> Find a Doctor</button>
+                      <button id="save-results-btn" class="btn secondary"><i class="fas fa-save"></i> Save Results</button>
+                      <button id="clear-symptoms-btn" class="btn secondary"><i class="fas fa-redo"></i> Start Over</button>
+                    </div>
+                  </div>
+                  <p class="disclaimer">Note: This is for educational purposes only and should not replace professional medical advice, diagnosis, or treatment.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Simulations Tab -->
+            <div id="simulations" class="dashboard-tab">
+              <h3>Medical Simulations</h3>
+              <p>Practice clinical scenarios with our interactive simulations.</p>
+
+              <div class="simulations-grid">
+                <div class="simulation-card">
+                  <div class="simulation-thumbnail" style="background-color: #3498db;">
+                    <i class="fas fa-heartbeat"></i>
+                  </div>
+                  <div class="simulation-details">
+                    <h4>Cardiac Emergency</h4>
+                    <p>Respond to a patient experiencing chest pain and shortness of breath</p>
+                    <div class="simulation-meta">
+                      <span><i class="fas fa-clock"></i> 20 minutes</span>
+                      <span><i class="fas fa-star"></i> Advanced</span>
+                    </div>
+                    <button class="btn primary">Start Simulation</button>
+                  </div>
+                </div>
+
+                <div class="simulation-card">
+                  <div class="simulation-thumbnail" style="background-color: #e74c3c;">
+                    <i class="fas fa-procedures"></i>
+                  </div>
+                  <div class="simulation-details">
+                    <h4>Trauma Assessment</h4>
+                    <p>Assess and stabilize a patient with multiple injuries</p>
+                    <div class="simulation-meta">
+                      <span><i class="fas fa-clock"></i> 30 minutes</span>
+                      <span><i class="fas fa-star"></i> Intermediate</span>
+                    </div>
+                    <button class="btn primary">Start Simulation</button>
+                  </div>
+                </div>
+
+                <div class="simulation-card">
+                  <div class="simulation-thumbnail" style="background-color: #2ecc71;">
+                    <i class="fas fa-notes-medical"></i>
+                  </div>
+                  <div class="simulation-details">
+                    <h4>Patient History Taking</h4>
+                    <p>Practice effective communication and history gathering</p>
+                    <div class="simulation-meta">
+                      <span><i class="fas fa-clock"></i> 15 minutes</span>
+                      <span><i class="fas fa-star"></i> Beginner</span>
+                    </div>
+                    <button class="btn primary">Start Simulation</button>
+                  </div>
+                </div>
+
+                <div class="simulation-card">
+                  <div class="simulation-thumbnail" style="background-color: #9b59b6;">
+                    <i class="fas fa-diagnoses"></i>
+                  </div>
+                  <div class="simulation-details">
+                    <h4>Differential Diagnosis Challenge</h4>
+                    <p>Analyze complex symptom presentations and determine possible diagnoses</p>
+                    <div class="simulation-meta">
+                      <span><i class="fas fa-clock"></i> 25 minutes</span>
+                      <span><i class="fas fa-star"></i> Advanced</span>
+                    </div>
+                    <button class="btn primary">Start Simulation</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="dashboard-tab">
+              <h3>Account Settings</h3>
+              
+              <div class="settings-sections">
+                <div class="settings-section">
+                  <h4>Profile Information</h4>
+                  <form id="profile-form">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="full-name">Full Name</label>
+                        <input type="text" id="full-name" name="full-name">
+                      </div>
+                      <div class="form-group">
+                        <label for="contact-email">Email</label>
+                        <input type="email" id="contact-email" name="contact-email">
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="specialty">Area of Study</label>
+                        <select id="specialty" name="specialty">
+                          <option value="">Select your focus area</option>
+                          <option value="medicine">Medicine</option>
+                          <option value="nursing">Nursing</option>
+                          <option value="pharmacy">Pharmacy</option>
+                          <option value="public-health">Public Health</option>
+                          <option value="research">Medical Research</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="education-level">Education Level</label>
+                        <select id="education-level" name="education-level">
+                          <option value="">Select your education level</option>
+                          <option value="undergraduate">Undergraduate</option>
+                          <option value="graduate">Graduate</option>
+                          <option value="phd">PhD</option>
+                          <option value="resident">Resident</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="bio">Bio</label>
+                      <textarea id="bio" name="bio" rows="4" placeholder="Tell us about yourself and your medical education goals"></textarea>
+                    </div>
+                    <button type="submit" class="btn primary">Save Changes</button>
+                  </form>
+                </div>
+
+                <div class="settings-section">
+                  <h4>Notification Preferences</h4>
+                  <form id="notifications-form">
+                    <div class="checkbox-group">
+                      <label>
+                        <input type="checkbox" name="email-notifications" checked>
+                        Email Notifications
+                      </label>
+                      <p class="help-text">Receive updates about new courses, quiz results, and important information</p>
+                    </div>
+                    <div class="checkbox-group">
+                      <label>
+                        <input type="checkbox" name="study-reminders" checked>
+                        Study Reminders
+                      </label>
+                      <p class="help-text">Get reminded about scheduled study sessions and upcoming quizzes</p>
+                    </div>
+                    <div class="checkbox-group">
+                      <label>
+                        <input type="checkbox" name="new-content-alerts">
+                        New Content Alerts
+                      </label>
+                      <p class="help-text">Be notified when new courses, quizzes, or simulations are added</p>
+                    </div>
+                    <button type="submit" class="btn primary">Save Preferences</button>
+                  </form>
+                </div>
+
+                <div class="settings-section">
+                  <h4>Account Security</h4>
+                  <form id="security-form">
+                    <div class="form-group">
+                      <label for="current-password">Current Password</label>
+                      <input type="password" id="current-password" name="current-password">
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" name="new-password">
+                      </div>
+                      <div class="form-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" name="confirm-password">
+                      </div>
+                    </div>
+                    <button type="submit" class="btn primary">Update Password</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>MediConnect</h3>
+          <p>Bridging the gap between healthcare professionals, students, and patients.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="consultation.html">Consultation</a></li>
+            <li><a href="learning.html">Learning</a></li>
+            <li><a href="community.html">Community</a></li>
+            <li><a href="ai-chat.html">AI Assistant</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p>Email: info@mediconnect.com</p>
+          <p>Phone: +1 (555) 123-4567</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 MediConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="student-dashboard.js"></script>
+</body>
+</html>

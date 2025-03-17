@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  // Apply role to body for CSS targeting
+  document.addEventListener('DOMContentLoaded', function() {
+    const userJson = localStorage.getItem('user');
+    if (userJson) {
+      try {
+        const user = JSON.parse(userJson);
+        document.body.setAttribute('data-role', user.role);
+        
+        // Configure AI chat based on role
+        const welcomeMessage = document.querySelector('.ai-welcome-message');
+        if (welcomeMessage) {
+          if (user.role === 'doctor') {
+            welcomeMessage.textContent = 'Welcome, Doctor. How can I assist with your medical research today?';
+          } else if (user.role === 'patient') {
+            welcomeMessage.textContent = 'Hello! I can help answer your health questions, but remember I\'m not a replacement for professional medical advice.';
+          } else if (user.role === 'student') {
+            welcomeMessage.textContent = 'Hi medical student! Ask me questions to help with your studies.';
+          }
+        }
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+      }
+    }
+  });
+</script>
+
+  <title>MediConnect AI Chat</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>MediConnect</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#consultation" data-tab="consultation">Consultation</a></li>
+          <li><a href="learning.html" data-tab="learning">Learning</a></li>
+          <li><a href="index.html#community" data-tab="community">Community</a></li>
+          <li><a href="ai-chat.html" class="active">AI Assistant</a></li>
+          <li><a href="#" class="login-btn">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h2 class="section-title">AI Medical Assistant</h2>
+
+      <div class="chat-container">
+        <div class="chat-header">
+          <i class="fas fa-robot"></i>
+          <h3>MediBot</h3>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+          <div class="message bot">
+            <div class="sender">MediBot</div>
+            <div class="message-content">
+              <h3>Hello!</h3>
+              <p>I'm your AI medical assistant. I can provide educational information about medical conditions, treatments, symptoms, and more.</p>
+              <p>How can I help you today?</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input">
+          <input type="text" id="user-input" placeholder="Type your health question here...">
+          <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+
+        <div class="chat-suggestions">
+          <p>Try asking about:</p>
+          <div class="suggestion-chips">
+            <span class="chip" onclick="document.getElementById('user-input').value='What is diabetes?'; document.getElementById('send-btn').click();">What is diabetes?</span>
+            <span class="chip" onclick="document.getElementById('user-input').value='Side effects of aspirin'; document.getElementById('send-btn').click();">Side effects of aspirin</span>
+            <span class="chip" onclick="document.getElementById('user-input').value='What causes headaches?'; document.getElementById('send-btn').click();">What causes headaches?</span>
+            <span class="chip" onclick="document.getElementById('user-input').value='Mediterranean diet'; document.getElementById('send-btn').click();">Mediterranean diet</span>
+          </div>
+        </div>
+
+        <div class="chat-disclaimer">
+          <p><i class="fas fa-exclamation-circle"></i> This AI assistant provides general health information for educational purposes only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider for medical concerns.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>MediConnect</h3>
+          <p>Connecting healthcare professionals, students, and patients for better health outcomes.</p>
+        </div>
+        <div class="footer-column">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="consultation.html">Find Doctor</a></li>
+            <li><a href="learning.html">Learning Resources</a></li>
+            <li><a href="community.html">Community</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Connect</h4>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+          <div class="share-link">
+            <input type="text" id="share-url" readonly>
+            <button class="btn" onclick="copyShareLink()">Copy Link</button>
+          </div>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2023 MediConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Login</h2>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="patient">Patient</button>
+        <button class="tab-btn" data-tab="doctor">Doctor</button>
+        <button class="tab-btn" data-tab="student">Student</button>
+      </div>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required>
+        </div>
+        <button type="submit" class="btn">Login</button>
+        <p class="form-footer">Don't have an account? <a href="#">Sign Up</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="bot.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    // DOM elements
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-btn');
+
+    // Keep track of loading element
+    let loadingElement = null;
+
+    // Function to add a message to the chat
+    function addMessage(message, isUser = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+
+      const senderDiv = document.createElement('div');
+      senderDiv.className = 'sender';
+      senderDiv.textContent = isUser ? 'You' : 'MediBot';
+
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'message-content';
+
+      if (isUser) {
+        contentDiv.textContent = message;
+      } else {
+        contentDiv.innerHTML = message;
+        
+        // Initialize any interactive elements in the response
+        setTimeout(() => {
+          const suggestionChips = contentDiv.querySelectorAll('.suggestion-chip');
+          suggestionChips.forEach(chip => {
+            if (!chip.getAttribute('data-initialized')) {
+              chip.setAttribute('data-initialized', 'true');
+              if (!chip.onclick) {
+                chip.addEventListener('click', function() {
+                  if (chip.getAttribute('data-query')) {
+                    userInput.value = chip.getAttribute('data-query');
+                    sendMessage();
+                  } else {
+                    userInput.value = this.textContent;
+                    sendMessage();
+                  }
+                });
+              }
+            }
+          });
+        }, 100);
+      }
+
+      messageDiv.appendChild(senderDiv);
+      messageDiv.appendChild(contentDiv);
+
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      return messageDiv;
+    }
+
+    // Function to show loading indicator
+    function showLoading() {
+      // Create loading indicator
+      const loadingDiv = document.createElement('div');
+      loadingDiv.className = 'message bot';
+      loadingDiv.id = 'loading-message';
+
+      const loadingSender = document.createElement('div');
+      loadingSender.className = 'sender';
+      loadingSender.textContent = 'MediBot';
+
+      const loadingContent = document.createElement('div');
+      loadingContent.className = 'message-content loading';
+      loadingContent.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Thinking...';
+
+      loadingDiv.appendChild(loadingSender);
+      loadingDiv.appendChild(loadingContent);
+
+      chatMessages.appendChild(loadingDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      loadingElement = loadingDiv;
+      return loadingDiv;
+    }
+
+    // Function to hide loading indicator
+    function hideLoading() {
+      if (loadingElement && loadingElement.parentNode) {
+        loadingElement.parentNode.removeChild(loadingElement);
+        loadingElement = null;
+      }
+    }
+
+    // Function to handle sending a message
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (message === '') return;
+
+      // Add user message to chat
+      addMessage(message, true);
+      userInput.value = '';
+
+      // Show loading indicator
+      showLoading();
+
+      try {
+        let response;
+        
+        // Try the API endpoint first as it's more reliable
+        try {
+          response = await processMessageWithAPI(message);
+        } catch (apiError) {
+          console.log('API failed, trying local bot:', apiError);
+          response = await processMessageWithBot(message);
+        }
+
+        // Hide loading indicator
+        hideLoading();
+
+        // Add bot response to chat
+        addMessage(response);
+      } catch (error) {
+        console.error('Error processing message:', error);
+
+        // Hide loading indicator
+        hideLoading();
+
+        // Add error message
+        addMessage('<p class="error">I encountered an error processing your request. Please try again with a different question.</p>');
+      }
+    }
+
+    // Process message with local bot.js
+    async function processMessageWithBot(message) {
+      return new Promise((resolve, reject) => {
+        try {
+          // Create a script tag to load bot.js
+          const script = document.createElement('script');
+          script.src = 'bot.js';
+          script.type = 'text/javascript';
+          
+          script.onload = async function() {
+            try {
+              // Try to access the global processMessage function
+              if (typeof window.processMessage !== 'function') {
+                // If not available, look for module exports
+                if (typeof module !== 'undefined' && module.exports && typeof module.exports.processMessage === 'function') {
+                  window.processMessage = module.exports.processMessage;
+                }
+              }
+              
+              if (typeof window.processMessage === 'function') {
+                const result = await window.processMessage(message);
+                resolve(result);
+              } else {
+                throw new Error('processMessage function not found');
+              }
+            } catch (error) {
+              console.error('Error in script onload:', error);
+              reject(error);
+            }
+          };
+          
+          script.onerror = function() {
+            reject(new Error('Failed to load bot.js'));
+          };
+          
+          document.head.appendChild(script);
+        } catch (error) {
+          console.error('Error setting up script:', error);
+          reject(error);
+        }
+      });
+    }
+
+    // Process message with API endpoint
+    async function processMessageWithAPI(message) {
+      try {
+        const response = await fetch('/api/medical/query', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ query: message })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Server responded with status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          return data.data;
+        } else {
+          return '<p class="error">I couldn\'t find information about that. Please try a different question.</p>';
+        }
+      } catch (error) {
+        console.error('Error using API:', error);
+        throw error;
+      }
+    }
+
+    // Event listeners for user interaction
+    document.addEventListener('DOMContentLoaded', function() {
+      // Event listener for send button
+      if (sendButton) {
+        sendButton.addEventListener('click', sendMessage);
+      }
+
+      // Event listener for pressing Enter key
+      if (userInput) {
+        userInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+      }
+
+      // Initialize suggested chips
+      document.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', function() {
+          const query = this.textContent;
+          userInput.value = query;
+          sendMessage();
+        });
+      });
+
+      // Adjust chat container height for better mobile experience
+      function adjustChatHeight() {
+        const header = document.querySelector('header');
+        const chatContainer = document.querySelector('.chat-container');
+        const chatMessages = document.querySelector('.chat-messages');
+        
+        if (header && chatContainer && chatMessages) {
+          const headerHeight = header.offsetHeight;
+          const windowHeight = window.innerHeight;
+          const availableHeight = windowHeight - headerHeight - 40; // 40px for some margin
+          
+          chatContainer.style.height = `${Math.min(600, availableHeight)}px`;
+          chatMessages.style.height = `${Math.min(500, availableHeight - 100)}px`; // 100px for input and other elements
+        }
+      }
+      
+      // Run on load and window resize
+      adjustChatHeight();
+      window.addEventListener('resize', adjustChatHeight);
+
+      // Focus input on load
+      if (userInput) {
+        setTimeout(() => {
+          userInput.focus();
+        }, 500);
+      }
+    });
+  </script>
+</body>
+</html>
